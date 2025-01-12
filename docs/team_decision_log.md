@@ -11,7 +11,7 @@ you like the best.
 | No. | Question/Option | Teammate name | Teammate name | Teammate name | Teammate name | Teammate name | Teammate name |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | 1 | Team meeting schedule | | | | | | |
-|   |	- Sprint Planning Sunday@9:00 a.m. CST | | | | | | |
+|   |	- Sprint Planning Wednesday@2:30 p.m. PST | | | | | | |
 |   |	- Knowledge Xfer as needed | | | | | | |
 |   |	- Working Session Thursday@4:00 p.m. CST | | | | | | |
 | 2	| Project Backlog Tool | | | | | | |
