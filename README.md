@@ -36,8 +36,7 @@ coding!
 
 - Teammate name #1: Nathan Syfrig (digable1) [GitHub](https://github.com/digable1) / [LinkedIn](https://www.linkedin.com/in/nathansyfrig/)
 - Teammate name #2: Robert Gordon (bobbygrdn)[GitHub](https://github.com/bobbygrdn) / [LinkedIn](https://linkedin.com/in/bobbygrdn)
-- Teammate name #3: Louis Choi (louis-code)[GitHub](https://github.com/chef-louis)
-
-  ...
+- Teammate name #3: Dev Govindji (d0uble0deven) [GitHub](https://github.com/d0uble0deven) / [LinkedIn](https://www.linkedin.com/in/devgovindji/)
+- Teammate name #4: Louis Choi (louis-code)[GitHub](https://github.com/chef-louis)
 
 - Teammate name #n: [GitHub](https://github.com/ghaccountname) / [LinkedIn](https://linkedin.com/in/liaccountname)
