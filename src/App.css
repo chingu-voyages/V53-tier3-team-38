@@ -1,3 +1,27 @@
+:root {
+  /* Primary Colors */
+  --primary-green: #27AE60;
+
+  /* Secondary Colors */
+  --secondary-teal: #16A085;
+  --secondary-light-gray: #ECF0F1;
+  --secondary-light-blue-gray: #E2E8F0;
+
+  /* Accent Colors */
+  --accent-yellow: #F1C40F;
+  --accent-red: #B91C1C;
+  --accent-orange: #F39C12;
+
+  /* Background Colors */
+  --background-very-light-pink: #FEE2E2;
+  --background-very-light-yellow: #FEF3C7;
+  --background-light-cream: #FFFBEB;
+
+  /* Text Colors */
+  --text-dark-blue: #2C3E50;
+  --text-light-gray: #E5E7EB;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,4 +31,50 @@
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f5f5f5;
+}
+
+/* Useage Recommendations */
+.header, .btn-primary, .key-highlight {
+  color: var(--primary-green);
+}
+
+.sidebar, .btn-secondary, .card {
+  color: var(--secondary-teal);
+  background-color: var(--secondary-light-gray);
+}
+
+.secondary-background {
+  background-color: var(--secondary-light-blue-gray);
+}
+
+.info-highlight {
+  color: var(--accent-yellow);
+}
+
+.error-message {
+  color: var(--accent-red);
+}
+
+.warning-callout {
+  color: var(--accent-orange);
+}
+
+.notification-background {
+  background-color: var(--background-very-light-pink);
+}
+
+.callout-background {
+  background-color: var(--background-very-light-yellow);
+}
+
+.differentiation-background {
+  background-color: var(--background-light-cream);
+}
+
+.primary-text {
+  color: var(--text-dark-blue);
+}
+
+.secondary-text {
+  color: var(--text-light-gray);
 }
