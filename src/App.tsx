@@ -1,9 +1,11 @@
 import "./App.css";
-import { ComingSoon } from "./components/comingSoon/ComingSoon";
+import { ComingSoon } from "./pages/comingSoon/ComingSoon";
+import { ComponentSamplePage } from "./pages/componentSamplePage/ComponentSamplePage";
 
 function App() {
   return (
     <>
+      <ComponentSamplePage />
       <ComingSoon />
     </>
   );
