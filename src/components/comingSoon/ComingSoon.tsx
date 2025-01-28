@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./ComingSoon.css";
 
 const calculateTimeLeft = (targetDate: Date) => {
@@ -24,7 +24,7 @@ const calculateTimeLeft = (targetDate: Date) => {
 };
 
 export const ComingSoon = () => {
-  const targetDate = new Date("2025-02-06T00:00:00"); // February 6th, 2025
+  const targetDate = useMemo(() => new Date("2025-02-06T00:00:00"), []); // February 6th, 2025
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(targetDate));
 
   useEffect(() => {
