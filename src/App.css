@@ -1,25 +1,25 @@
 :root {
   /* Primary Colors */
-  --primary-green: #27AE60;
+  --primary-green: #27ae60;
 
   /* Secondary Colors */
-  --secondary-teal: #16A085;
-  --secondary-light-gray: #ECF0F1;
-  --secondary-light-blue-gray: #E2E8F0;
+  --secondary-teal: #16a085;
+  --secondary-light-gray: #ecf0f1;
+  --secondary-light-blue-gray: #e2e8f0;
 
   /* Accent Colors */
-  --accent-yellow: #F1C40F;
-  --accent-red: #B91C1C;
-  --accent-orange: #F39C12;
+  --accent-yellow: #f1c40f;
+  --accent-red: #b91c1c;
+  --accent-orange: #f39c12;
 
   /* Background Colors */
-  --background-very-light-pink: #FEE2E2;
-  --background-very-light-yellow: #FEF3C7;
-  --background-light-cream: #FFFBEB;
+  --background-very-light-pink: #fee2e2;
+  --background-very-light-yellow: #fef3c7;
+  --background-light-cream: #fffbeb;
 
   /* Text Colors */
-  --text-dark-blue: #2C3E50;
-  --text-light-gray: #E5E7EB;
+  --text-dark-blue: #2c3e50;
+  --text-light-gray: #e5e7eb;
 }
 
 * {
@@ -34,11 +34,15 @@ body {
 }
 
 /* Useage Recommendations */
-.header, .btn-primary, .key-highlight {
+.header,
+.btn-primary,
+.key-highlight {
   color: var(--primary-green);
 }
 
-.sidebar, .btn-secondary, .card {
+.sidebar,
+.btn-secondary,
+.card {
   color: var(--secondary-teal);
   background-color: var(--secondary-light-gray);
 }

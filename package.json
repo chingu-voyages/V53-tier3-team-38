@@ -8,10 +8,12 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.47.13",
+    "netlify-cli": "^18.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -19,6 +21,8 @@
     "@eslint/js": "^9.17.0",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
+    "@typescript-eslint/eslint-plugin": "^8.22.0",
+    "@typescript-eslint/parser": "^8.22.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
@@ -29,9 +33,13 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
     "prettier": "^3.4.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
