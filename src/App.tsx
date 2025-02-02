@@ -1,4 +1,5 @@
 import "./App.css";
+import React from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -9,11 +10,10 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { Dashboard } from "./pages/Dashboard";
-import { Home } from "./pages/Home";
 import { useState } from "react";
 import { AuthWrapper } from "./components/authWrapper/AuthWrapper";
 
-export const App = () => {
+export const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogin = () => {
@@ -33,9 +33,7 @@ export const App = () => {
               <Dashboard />
             </AuthWrapper>
           }
-        >
-          <Route path="home" element={<Home />} />
-        </Route>
+        />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
