@@ -101,38 +101,6 @@ REFERENCES public.dishes (name) MATCH FULL
 ON DELETE SET NULL ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: public.teams | type: TABLE --
--- DROP TABLE IF EXISTS public.teams CASCADE;
-CREATE TABLE public.teams (
-	team_id uuid NOT NULL DEFAULT gen_random_uuid(),
-	name text,
-	date_meals_calendar date,
-	CONSTRAINT teams_pk PRIMARY KEY (team_id)
-);
--- ddl-end --
-ALTER TABLE public.teams OWNER TO postgres;
--- ddl-end --
-
--- object: public.members | type: TABLE --
--- DROP TABLE IF EXISTS public.members CASCADE;
-CREATE TABLE public.members (
-	member_id uuid NOT NULL DEFAULT gen_random_uuid(),
-	is_manager boolean NOT NULL DEFAULT false,
-	team_id_teams uuid,
-	id_users uuid,
-	CONSTRAINT members_pk PRIMARY KEY (member_id)
-);
--- ddl-end --
-ALTER TABLE public.members OWNER TO postgres;
--- ddl-end --
-
--- object: teams_fk | type: CONSTRAINT --
--- ALTER TABLE public.members DROP CONSTRAINT IF EXISTS teams_fk CASCADE;
-ALTER TABLE public.members ADD CONSTRAINT teams_fk FOREIGN KEY (team_id_teams)
-REFERENCES public.teams (team_id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
--- ddl-end --
-
 -- object: public.many_roles_has_many_users | type: TABLE --
 -- DROP TABLE IF EXISTS public.many_roles_has_many_users CASCADE;
 CREATE TABLE public.many_roles_has_many_users (
@@ -156,34 +124,10 @@ REFERENCES public.users (id) MATCH FULL
 ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
--- object: meals_calendar_fk | type: CONSTRAINT --
--- ALTER TABLE public.teams DROP CONSTRAINT IF EXISTS meals_calendar_fk CASCADE;
-ALTER TABLE public.teams ADD CONSTRAINT meals_calendar_fk FOREIGN KEY (date_meals_calendar)
-REFERENCES public.meals_calendar (date) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
--- ddl-end --
-
--- object: teams_uq | type: CONSTRAINT --
--- ALTER TABLE public.teams DROP CONSTRAINT IF EXISTS teams_uq CASCADE;
-ALTER TABLE public.teams ADD CONSTRAINT teams_uq UNIQUE (date_meals_calendar);
--- ddl-end --
-
--- object: users_fk | type: CONSTRAINT --
--- ALTER TABLE public.members DROP CONSTRAINT IF EXISTS users_fk CASCADE;
-ALTER TABLE public.members ADD CONSTRAINT users_fk FOREIGN KEY (id_users)
-REFERENCES public.users (id) MATCH FULL
-ON DELETE SET NULL ON UPDATE CASCADE;
--- ddl-end --
-
--- object: members_uq | type: CONSTRAINT --
--- ALTER TABLE public.members DROP CONSTRAINT IF EXISTS members_uq CASCADE;
-ALTER TABLE public.members ADD CONSTRAINT members_uq UNIQUE (id_users);
--- ddl-end --
-
 -- object: public.roles_enum | type: TYPE --
 -- DROP TYPE IF EXISTS public.roles_enum CASCADE;
 CREATE TYPE public.roles_enum AS
-ENUM ('admin','user');
+ENUM ('admin','manager','staff');
 -- ddl-end --
 ALTER TYPE public.roles_enum OWNER TO postgres;
 -- ddl-end --

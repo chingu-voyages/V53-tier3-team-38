@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the database schema for the Menu Scheduler application. The database is built using PostgreSQL (via Supabase) and contains tables for managing users, roles, dishes, ingredients, allergens, meal calendars, and team organization.
+This document describes the database schema for the Menu Scheduler application. The database is built using PostgreSQL (via Supabase) and contains tables for managing users, roles, dishes, ingredients, allergens, and meal calendars.
 
 ![Entity Relationship Diagram](menu_scheduler_erd.png)
 
@@ -58,23 +58,6 @@ Tracks scheduled meals and off days.
 - `is_day_off` (boolean): Indicates if it's a day off, defaults to false
 - `name_dishes` (text, FK): Reference to scheduled dish
 
-### Teams
-
-Manages team organization.
-
-- `team_id` (UUID, PK): Unique team identifier, auto-generated
-- `name` (text): Team name
-- `date_meals_calendar` (date, FK): Reference to meals calendar
-
-### Members
-
-Manages team membership and roles.
-
-- `member_id` (UUID, PK): Unique member identifier, auto-generated
-- `is_manager` (boolean): Indicates if member is a manager, defaults to false
-- `team_id_teams` (UUID, FK): Reference to team
-- `id_users` (UUID, FK): Reference to user
-
 ## Cross-Reference Tables
 
 ### many_roles_has_many_users
@@ -91,20 +74,18 @@ Maps the many-to-many relationship between roles and users.
 Enumerated type for role values:
 
 - `admin`
-- `user`
+- `manager`
+- `staff`
 
 ## Key Relationships
 
 1. Ingredients → Allergens: Each ingredient can be associated with an allergen
 2. Meals Calendar → Dishes: Each calendar entry can reference a specific dish
-3. Teams → Meals Calendar: Teams can be associated with specific calendar dates
-4. Members → Teams: Members belong to teams
-5. Members → Users: Members are linked to user accounts
-6. Users ↔ Roles: Many-to-many relationship through cross-reference table
+3. Users ↔ Roles: Many-to-many relationship through cross-reference table
 
 ## Notes
 
 - The database uses UUID for most entity identifiers
 - Timestamps are stored in timestamptz format for proper timezone handling
-- Team members can be designated as managers through the `is_manager` boolean flag
+- Users can be designated as an admin, manager or staff
 - Calendar entries can be marked as off days using the `is_day_off` flag
