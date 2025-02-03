@@ -17,13 +17,13 @@ const buttonVariants = cva(
   {
     variants: {
       size: {
-        small: "h-8 px-3 text-xs min-w-[80px]",
-        medium: "h-10 px-4 text-sm min-w-[100px]",
-        big: "h-12 px-6 text-base min-w-[120px]",
+        small: "h-10 px-3 text-xs min-w-[58.81px]",
+        medium: "h-10 px-4 text-sm min-w-[223.2]",
+        big: "h-10 px-6 text-base min-w-[318.4px]",
       },
       variantColor: {
         white: "bg-white text-black hover:bg-gray-100 border border-gray-300",
-        green: "bg-green-500 text-white hover:bg-green-600",
+        green: "bg-[#27AE60] text-white hover:bg-green-600",
         red: "bg-red-500 text-white hover:bg-red-600",
       },
     },
