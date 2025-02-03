@@ -10,32 +10,30 @@ import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { Dashboard } from "./pages/Dashboard";
-import { useState } from "react";
-import { AuthWrapper } from "./components/authWrapper/AuthWrapper";
+import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
+import { AuthContextProvider } from "./context/AuthContext.tsx";
+import NotFound from "./pages/NotFound.tsx";
 
 export const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-  };
-
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route
-          path="/dashboard/*"
-          element={
-            <AuthWrapper isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </AuthWrapper>
-          }
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <AuthContextProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="404" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/404" />} />
+        </Routes>
+      </Router>
+    </AuthContextProvider>
   );
 };
