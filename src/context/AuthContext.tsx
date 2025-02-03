@@ -19,7 +19,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   // Sign up
   async function signUpNewUser(
     email: string,
-    password: string
+    password: string,
   ): Promise<AuthResponseCustom> {
     const { data, error } = await supabase.auth.signUp({
       email: email,
@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   // Sign in
   async function signInUser(
     email: string,
-    password: string
+    password: string,
   ): Promise<AuthResponseCustom> {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
@@ -80,7 +80,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         // if (_event === "SIGNED_IN") {
         //   window.location.href = "/dashboard";
         // }
-      }
+      },
     );
 
     return () => {
