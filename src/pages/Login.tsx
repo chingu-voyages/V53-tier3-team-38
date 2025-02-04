@@ -8,26 +8,25 @@ interface LoginProps {
 }
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleLoginClick = () => {
     // Perform login logic here
     onLogin();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDemoLogin = () => {
-    // Perform demo login logic here
-    console.log("Demo login");
-  };
+  // const handleDemoLogin = () => {
+  //   // Perform demo login logic here
+  //   console.log("Demo login");
+  // };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleGoogleLogin = () => {
-    // Perform Google login logic here
-    console.log("Google login");
-  };
+  // const handleGoogleLogin = () => {
+  //   // Perform Google login logic here
+  //   console.log("Google login");
+  // };
 
   return (
-    <></>
+    <>
+      <button onClick={handleLoginClick}>Log in</button>
+    </>
     // <div
     //   className="min-h-screen w-full flex items-center justify-center py-12"
     //   style={{
