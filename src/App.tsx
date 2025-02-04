@@ -1,4 +1,6 @@
 import "./App.css";
+import { ComingSoon } from "./pages/comingSoon/ComingSoon";
+import { ComponentSamplePage } from "./pages/componentSamplePage/ComponentSamplePage";
 import React from "react";
 import {
   BrowserRouter as Router,
@@ -21,21 +23,25 @@ export const App: React.FC = () => {
   };
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route
-          path="/dashboard/*"
-          element={
-            <AuthWrapper isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </AuthWrapper>
-          }
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <>
+      <ComponentSamplePage />
+      <ComingSoon />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/dashboard/*"
+            element={
+              <AuthWrapper isAuthenticated={isAuthenticated}>
+                <Dashboard />
+              </AuthWrapper>
+            }
+          />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </Router>
+    </>
   );
 };
