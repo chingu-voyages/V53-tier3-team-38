@@ -171,6 +171,15 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   placeholder="Enter your password"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
                 />
+                <div className="flex justify-end">
+                  <a
+                    href="/forgot-password"
+                    className="text-sm font-medium hover:underline"
+                    style={{ color: "#16A085" }}
+                  >
+                    Forgot Password?
+                  </a>
+                </div>
                 <CustomButton
                   variantColor="green"
                   size="big"
