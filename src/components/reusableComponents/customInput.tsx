@@ -22,6 +22,7 @@ export interface CustomInputProps
   type: "text" | "email" | "password";
 }
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
   ({ className, type, label, error, ...props }, ref) => {
     const [value, setValue] = React.useState("");
@@ -35,15 +36,16 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
       }
       switch (type) {
         case "email":
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(value)) {
             setErrorMessage("Invalid email address");
+            console.error(error);
             return false;
           }
           break;
         case "password":
           if (value.length < 8) {
             setErrorMessage("Password must be at least 8 characters long");
+            console.error(error);
             return false;
           }
           break;
@@ -74,7 +76,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
             className={cn(
               "w-[318.4px] h-[41.6px] border-none placeholder-gray-400",
               errorMessage && "focus-visible:ring-destructive",
-              className
+              className,
             )}
             ref={ref}
             value={value}
@@ -88,7 +90,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 CustomInput.displayName = "CustomInput";
 

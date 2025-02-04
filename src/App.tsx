@@ -26,22 +26,22 @@ export const App: React.FC = () => {
     <>
       <ComponentSamplePage />
       <ComingSoon />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/dashboard/*"
+            element={
+              <AuthWrapper isAuthenticated={isAuthenticated}>
+                <Dashboard />
+              </AuthWrapper>
+            }
+          />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </Router>
     </>
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route
-          path="/dashboard/*"
-          element={
-            <AuthWrapper isAuthenticated={isAuthenticated}>
-              <Dashboard />
-            </AuthWrapper>
-          }
-        />
-        <Route path="*" element={<Navigate to="/login" />} />
-      </Routes>
-    </Router>
   );
 };

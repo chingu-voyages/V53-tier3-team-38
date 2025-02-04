@@ -19,7 +19,7 @@ const StatusCard: React.FC<StatusCardProps> = ({ type, message }) => {
         "text-white text-sm",
         isAlert ? "bg-[#580F0F]" : "bg-[#645414]",
         message.split(" ").length > 10 ? "min-h-[74px]" : "",
-        message.split(" ").length > 20 ? "min-h-[99px]" : ""
+        message.split(" ").length > 20 ? "min-h-[99px]" : "",
       )}
     >
       {isAlert ? (

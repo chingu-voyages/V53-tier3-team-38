@@ -23,7 +23,7 @@ const iconButtonVariants = cva(
       variant: "pencil",
       size: "default",
     },
-  }
+  },
 );
 
 export interface IconButtonProps
@@ -35,6 +35,11 @@ export interface IconButtonProps
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
   ({ className, variant, size, icon, ...props }, ref) => {
     const Icon: LucideIcon = icon === "trash" ? Trash : Pencil;
+    console.log(
+      "IconButtonProps",
+      { className, variant, size, icon, ...props },
+      ref,
+    );
 
     return (
       <Button
@@ -45,7 +50,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
         <Icon className="h-4 w-4" />
       </Button>
     );
-  }
+  },
 );
 IconButton.displayName = "IconButton";
 

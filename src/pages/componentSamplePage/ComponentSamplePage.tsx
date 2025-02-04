@@ -1,3 +1,4 @@
+import * as React from "react";
 import { CustomButton } from "@/components/reusableComponents/customButton";
 import { IconButton } from "@/components/reusableComponents/iconButton";
 import { CustomInput } from "@/components/reusableComponents/customInput";

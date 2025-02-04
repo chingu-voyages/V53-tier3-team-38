@@ -8,7 +8,6 @@ import {
   ChefHat,
   AlertTriangle,
   PlayCircle,
-  TypeIcon as type,
   type LucideIcon,
 } from "lucide-react";
 
@@ -31,7 +30,7 @@ const buttonVariants = cva(
       size: "medium",
       variantColor: "white",
     },
-  }
+  },
 );
 
 export interface CustomButtonProps
@@ -61,14 +60,14 @@ const CustomButton = React.forwardRef<HTMLButtonElement, CustomButtonProps>(
         {children}
       </Button>
     );
-  }
+  },
 );
 CustomButton.displayName = "CustomButton";
 
 export { CustomButton, buttonVariants };
 
 const getIcon = (
-  icon: CustomButtonProps["icon"]
+  icon: CustomButtonProps["icon"],
 ): LucideIcon | React.FC<React.SVGProps<SVGSVGElement>> => {
   switch (icon) {
     case "settings":
