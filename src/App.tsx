@@ -1,5 +1,4 @@
 import "./App.css";
-import { ComingSoon } from "./pages/comingSoon/ComingSoon";
 import { ComponentSamplePage } from "./pages/componentSamplePage/ComponentSamplePage";
 import React from "react";
 import {
@@ -24,13 +23,12 @@ export const App: React.FC = () => {
 
   return (
     <>
-      <ComponentSamplePage />
-      <ComingSoon />
       <Router>
         <Routes>
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/components" element={<ComponentSamplePage />} />
           <Route
             path="/dashboard/*"
             element={
