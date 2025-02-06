@@ -15,19 +15,20 @@ const StatusCard: React.FC<StatusCardProps> = ({ type, message }) => {
   return (
     <div
       className={cn(
-        "flex items-center p-3 rounded-md w-[178px] min-h-[49px]",
-        "text-white text-sm",
-        isAlert ? "bg-[#580F0F]" : "bg-[#645414]",
+        "flex flex-1 items-center p-3 rounded-md w-3xs min-h-[60px] gap-4",
+        "text-[#2C3E50] text-lg",
+        isAlert ? "bg-[#FEE2E2]" : "bg-[#FFFBEB]",
         message.split(" ").length > 10 ? "min-h-[74px]" : "",
         message.split(" ").length > 20 ? "min-h-[99px]" : "",
       )}
+      style={{ padding: "0.75rem" }}
     >
       {isAlert ? (
-        <AlertOctagon className="w-5 h-5 mr-2 flex-shrink-0 text-[#AE2F2F]" />
+        <AlertOctagon className="w-10 h-10 mr-2 flex-shrink-0 text-[#B91C1C]" />
       ) : (
-        <AlertTriangle className="w-5 h-5 mr-2 flex-shrink-0 text-[#F39C12]" />
+        <AlertTriangle className="w-10 h-10 mr-2 flex-shrink-0 text-[#F39C12]" />
       )}
-      <p className="flex-grow">{message}</p>
+      <p className="flex-grow pointer-events-none">{message}</p>
     </div>
   );
 };

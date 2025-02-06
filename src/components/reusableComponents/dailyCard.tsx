@@ -15,15 +15,21 @@ export const DailyCard: React.FC<DailyCardProps> = ({
   dishCount,
 }) => {
   return (
-    <div className="flex items-center justify-between p-4 bg-[#E2E8F0] rounded-lg w-full max-w-sm">
-      <div className="flex items-center space-x-4">
-        <div className="text-center">
+    <div
+      className="flex items-center justify-between bg-[#ECF0F1] rounded-lg w-full max-w-sm"
+      style={{ padding: "1rem" }}
+    >
+      <div
+        className="flex items-center"
+        style={{ marginInlineStart: "1rem", gap: "1rem" }}
+      >
+        <div className="text-center pointer-events-none">
           <div className="font-semibold">{day}</div>
-          <div className="text-sm">{date}</div>
+          <div className="text-large">{date}</div>
         </div>
-        <div>
+        <div className="pointer-events-none">
           <div className="font-medium">{mealTitle}</div>
-          <div className="text-sm text-gray-600">{dishCount} Dishes</div>
+          <div className="text-large text-gray-600">{dishCount} Dishes</div>
         </div>
       </div>
       <CustomButton size="small" variantColor="green">
