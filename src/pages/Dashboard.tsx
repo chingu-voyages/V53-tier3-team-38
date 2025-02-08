@@ -13,14 +13,14 @@ import { UserManagement } from "./UserManagement";
 export const Dashboard: React.FC = () => {
   return (
     <div
-      className="flex w-full min-h-screen"
+      className="flex w-screen h-screen"
       style={{ backgroundColor: "#ECF0F1" }}
     >
       <Sidebar />
       <div className="flex flex-col flex-1">
         <Header />
         <main
-          className="flex-1 fixed top-16 bottom-0 overflow-auto"
+          className="flex flex-1 overflow-y-scroll"
           style={{ backgroundColor: "#ECF0F1" }}
         >
           <Routes>
