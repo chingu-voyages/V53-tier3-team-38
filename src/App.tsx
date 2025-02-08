@@ -18,6 +18,7 @@ export const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleLogin = () => {
+    // Login logic here
     setIsAuthenticated(true);
   };
 

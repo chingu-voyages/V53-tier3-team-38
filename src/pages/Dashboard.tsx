@@ -8,6 +8,7 @@ import { Settings } from "./Settings";
 import { DailyMenu } from "./DailyMenu";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { Header } from "@/components/ui/Header";
+import { UserManagement } from "./UserManagement";
 
 export const Dashboard: React.FC = () => {
   return (
@@ -29,6 +30,7 @@ export const Dashboard: React.FC = () => {
             <Route path="browse-dishes" element={<BrowseDishes />} />
             <Route path="allergies" element={<Allergies />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="user-management" element={<UserManagement />} />
             <Route path="*" element={<Navigate to="/dashboard/home" />} />
           </Routes>
         </main>
