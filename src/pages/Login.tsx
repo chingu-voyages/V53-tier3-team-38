@@ -2,6 +2,7 @@ import React from "react";
 import { ChefHat, Check } from "lucide-react";
 import { CustomInput } from "@/components/reusableComponents/customInput";
 import { CustomButton } from "@/components/reusableComponents/customButton";
+import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   onLogin: () => void;
@@ -30,17 +31,22 @@ const features = [
 ];
 
 export const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const handleLoginClick = () => {
+  const navigate = useNavigate();
+  const handleLoginClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     // Perform login logic here
     onLogin();
+    navigate("/dashboard");
   };
 
-  const handleDemoLogin = () => {
+  const handleDemoLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     // Perform demo login logic here
     console.log("Demo login");
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     // Perform Google login logic here
     console.log("Google login");
   };
@@ -120,8 +126,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 size="medium"
                 style={{ cursor: "pointer" }}
                 onClick={() =>
-                  (window.location.href =
-                    "https://github.com/chingu-voyages/V53-tier3-team-38")
+                (window.location.href =
+                  "https://github.com/chingu-voyages/V53-tier3-team-38")
                 }
               >
                 GitHub
