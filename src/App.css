@@ -37,7 +37,6 @@
 body {
   font-family: "Roboto", sans-serif;
   background-color: #f5f5f5;
-  overflow-y: hidden;
 }
 
 /* Useage Recommendations */
@@ -118,6 +117,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
@@ -150,6 +150,7 @@ body {
   * {
     /* @apply border-border; */
   }
+
   body {
     /* @apply bg-background text-foreground; */
   }
