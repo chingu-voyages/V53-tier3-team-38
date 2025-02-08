@@ -20,7 +20,7 @@ export const Dashboard: React.FC = () => {
       <div className="flex flex-col flex-1">
         <Header />
         <main
-          className="flex-1 fixed top-16 left-64 right-0 bottom-0 overflow-auto"
+          className="flex-1 fixed top-16 bottom-0 overflow-auto"
           style={{ backgroundColor: "#ECF0F1" }}
         >
           <Routes>
