@@ -69,7 +69,8 @@ export const Login: React.FC = () => {
     }
   }
 
-  const handleDemoLogin = () => {
+  const handleDemoLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     // Perform demo login logic here
     console.log("Demo login");
   };

@@ -8,18 +8,19 @@ import { Settings } from "./Settings";
 import { DailyMenu } from "./DailyMenu";
 import { Sidebar } from "@/components/ui/Sidebar";
 import { Header } from "@/components/ui/Header";
+import { UserManagement } from "./UserManagement";
 
 export const Dashboard: React.FC = () => {
   return (
     <div
-      className="flex w-full min-h-screen"
+      className="flex w-screen h-screen"
       style={{ backgroundColor: "#ECF0F1" }}
     >
       <Sidebar />
       <div className="flex flex-col flex-1">
         <Header />
         <main
-          className="flex-1 fixed top-16 left-64 right-0 bottom-0 overflow-auto"
+          className="flex flex-1 overflow-y-scroll"
           style={{ backgroundColor: "#ECF0F1" }}
         >
           <Routes>
@@ -29,6 +30,7 @@ export const Dashboard: React.FC = () => {
             <Route path="browse-dishes" element={<BrowseDishes />} />
             <Route path="allergies" element={<Allergies />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="user-management" element={<UserManagement />} />
             <Route path="*" element={<Navigate to="/dashboard/home" />} />
           </Routes>
         </main>
