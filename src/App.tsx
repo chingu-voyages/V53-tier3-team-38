@@ -13,6 +13,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { ComponentSamplePage } from "./pages/componentSamplePage/ComponentSamplePage";
 
 export const App: React.FC = () => {
   return (
@@ -22,6 +23,7 @@ export const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/components" element={<ComponentSamplePage />} />
           <Route
             path="/dashboard/*"
             element={

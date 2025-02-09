@@ -46,6 +46,7 @@ The pipeline is automatically triggered on each push to the main branch after ch
 
 - [Team Project Ideas](./docs/team_project_ideas.md)
 - [Team Decision Log](./docs/team_decision_log.md)
+- [Figma Design](https://www.figma.com/design/5zzT4VVu4G20vaO2GhW3ur/Dashboard?node-id=0-1&t=7BYI6gcxTcXwSzRv-1)
 
 ## Our Team
 
