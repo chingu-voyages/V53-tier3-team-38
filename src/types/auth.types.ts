@@ -26,6 +26,7 @@ export type SupabaseContext = {
   ) => Promise<AuthResponseCustom> | null;
   signInUserGoogle: () => Promise<AuthResponseCustom> | null;
   signOut: () => Promise<AuthResponseCustom> | null;
+  validateEmail: (str: string) => boolean;
 };
 
 export const defaultContext = {
@@ -35,4 +36,5 @@ export const defaultContext = {
   signInUser: () => null,
   signInUserGoogle: () => null,
   signOut: () => null,
+  validateEmail: () => false,
 };

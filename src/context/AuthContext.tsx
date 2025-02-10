@@ -98,6 +98,14 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return { success: true, data: { user: null, session: null }, error: null };
   }
 
+  // Validate email
+  function validateEmail(str: string) {
+    if (!str) return false;
+    const pattern =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return pattern.test(str);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -107,6 +115,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         signInUser,
         signInUserGoogle,
         signOut,
+        validateEmail,
       }}
     >
       {children}

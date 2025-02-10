@@ -188,7 +188,7 @@ export const Login: React.FC = () => {
               >
                 Login to your account
               </h2>
-              <form className="space-y-4" onSubmit={handleEmailLogin}>
+              <form className="space-y-4">
                 <CustomInput
                   label="Email address"
                   type="email"
@@ -220,8 +220,8 @@ export const Login: React.FC = () => {
                   variantColor="green"
                   size="big"
                   style={{ marginTop: "10px", cursor: "pointer" }}
-                  type="submit"
                   disabled={loading}
+                  onClick={handleEmailLogin}
                 >
                   Sign in
                 </CustomButton>

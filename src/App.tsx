@@ -9,6 +9,7 @@ import {
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { ForgotPassword } from "./pages/ForgotPassword";
+import { ResetPassword } from "./pages/ResetPassword.tsx";
 import { Dashboard } from "./pages/Dashboard";
 import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
 import { AuthContextProvider } from "./context/AuthContext.tsx";
@@ -23,6 +24,7 @@ export const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/components" element={<ComponentSamplePage />} />
           <Route
             path="/dashboard/*"
