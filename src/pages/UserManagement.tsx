@@ -56,9 +56,9 @@ export const UserManagement: React.FC = () => {
       prev.map((user) =>
         user.id === userId
           ? {
-            ...user,
-            role: newRole,
-          }
+              ...user,
+              role: newRole,
+            }
           : user,
       ),
     );
@@ -68,9 +68,10 @@ export const UserManagement: React.FC = () => {
     setShowDeleteConfirm(null);
   };
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-    user.email.toLowerCase().startsWith(searchQuery.toLowerCase()),
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+      user.email.toLowerCase().startsWith(searchQuery.toLowerCase()),
   );
 
   return (
@@ -86,7 +87,7 @@ export const UserManagement: React.FC = () => {
           className="flex flex-col md:flex-row md:items-center justify-between gap-4"
           style={{
             borderBottom: "1px solid #E2E8F0",
-            padding: "1.5rem"
+            padding: "1.5rem",
           }}
         >
           <h2
@@ -169,7 +170,7 @@ export const UserManagement: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.length > 0 ?
+                {filteredUsers.length > 0 ? (
                   filteredUsers.map((user) => (
                     <tr
                       key={user.id}
@@ -179,7 +180,10 @@ export const UserManagement: React.FC = () => {
                       }}
                     >
                       <td style={{ paddingBlock: "1rem" }}>
-                        <div className="flex items-center gap-3" style={{ paddingLeft: "0.25rem" }}>
+                        <div
+                          className="flex items-center gap-3"
+                          style={{ paddingLeft: "0.25rem" }}
+                        >
                           <img
                             src={user.avatar}
                             alt=""
@@ -277,13 +281,18 @@ export const UserManagement: React.FC = () => {
                         </div>
                       </td>
                     </tr>
-                  )) : (
-                    <tr>
-                      <td colSpan={4} className="text-center text-gray-500" style={{ padding: "1rem" }}>
-                        No users found
-                      </td>
-                    </tr>
-                  )}
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={4}
+                      className="text-center text-gray-500"
+                      style={{ padding: "1rem" }}
+                    >
+                      No users found
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -302,7 +311,7 @@ export const UserManagement: React.FC = () => {
               backgroundColor: "#FFFFFF",
               border: "1px solid #E2E8F0",
               padding: "1.5rem",
-              marginInline: "1rem"
+              marginInline: "1rem",
             }}
           >
             <h3
@@ -322,7 +331,10 @@ export const UserManagement: React.FC = () => {
               Are you sure you want to delete this user? This action cannot be
               undone.
             </p>
-            <div className="flex justify-end gap-3" style={{ marginTop: "1.5rem" }}>
+            <div
+              className="flex justify-end gap-3"
+              style={{ marginTop: "1.5rem" }}
+            >
               <button
                 onClick={() => setShowDeleteConfirm(null)}
                 className="rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
@@ -354,7 +366,7 @@ export const UserManagement: React.FC = () => {
               backgroundColor: "#FFFFFF",
               border: "1px solid #E2E8F0",
               padding: "1.5rem",
-              marginInline: "1rem"
+              marginInline: "1rem",
             }}
           >
             <div className="flex items-center justify-between">
@@ -436,7 +448,9 @@ export const UserManagement: React.FC = () => {
                   value={editingUser.status}
                   onChange={(e) =>
                     setEditingUser((prev) =>
-                      prev ? { ...prev, status: e.target.value as User["status"] } : prev,
+                      prev
+                        ? { ...prev, status: e.target.value as User["status"] }
+                        : prev,
                     )
                   }
                   className="text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
@@ -447,7 +461,10 @@ export const UserManagement: React.FC = () => {
                 </select>
               </div>
             </div>
-            <div className="flex justify-end gap-3" style={{ marginTop: "1.5rem" }}>
+            <div
+              className="flex justify-end gap-3"
+              style={{ marginTop: "1.5rem" }}
+            >
               <button
                 onClick={() => setEditingUser(null)}
                 className="rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
