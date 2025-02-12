@@ -96,7 +96,7 @@ export const Settings: React.FC = () => {
     >
       <div className="w-full mx-auto">
         <div
-          className="bg-white p-4 rounded-lg border border-gray-200"
+          className="bg-white rounded-lg border border-gray-200"
           style={{ marginBottom: "1rem", padding: "1rem" }}
         >
           <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
