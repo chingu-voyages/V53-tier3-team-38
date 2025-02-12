@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { format, addDays, startOfWeek } from "date-fns";
 import { CustomButton } from "@/components/reusableComponents/customButton";
+import { useNavigate } from "react-router-dom";
 const mockDishes = [
   {
     id: 1,
@@ -67,6 +68,7 @@ interface Dish {
   allergens: string[];
 }
 interface DaySchedule {
+  id: number;
   date: Date;
   dish: Dish | null;
   isDayOff: boolean;
@@ -77,6 +79,7 @@ export const WeeklyMenus: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [safeDishes, setSafeDishes] = useState<Dish[]>([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const workerAllergens = mockWorkerAllergies.flatMap(
       (worker) => worker.allergies,
@@ -99,21 +102,22 @@ export const WeeklyMenus: React.FC = () => {
         const date = addDays(weekStart, i);
         if (i === 1) {
           return {
+            id: i,
             date,
             dish: safeDishes.find((d) => d.id === 5) || null,
-            // Grilled Chicken
             isDayOff: false,
           };
         }
         if (i === 3) {
           return {
+            id: i,
             date,
             dish: safeDishes.find((d) => d.id === 4) || null,
-            // Quinoa Bowl
             isDayOff: false,
           };
         }
         return {
+          id: i,
           date,
           dish: null,
           isDayOff: false,
@@ -140,14 +144,8 @@ export const WeeklyMenus: React.FC = () => {
     setSuccess("Weekly menu generated successfully!");
     setTimeout(() => setSuccess(null), 3000);
   };
-  const toggleDayOff = (dayIndex: number) => {
-    const newSchedule = [...schedule];
-    newSchedule[dayIndex] = {
-      ...newSchedule[dayIndex],
-      isDayOff: !newSchedule[dayIndex].isDayOff,
-      dish: null,
-    };
-    setSchedule(newSchedule);
+  const navigateDay = (id: number) => {
+    navigate(`/dashboard/manage-menus/daily/${id}`);
   };
   const navigateWeek = (direction: "prev" | "next") => {
     const newDate = new Date(currentWeek);
@@ -249,15 +247,17 @@ export const WeeklyMenus: React.FC = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => toggleDayOff(index)}
-                    className={`rounded-full text-sm font-medium ${day.isDayOff ? "bg-red-100 text-red-700" : "bg-green-600 text-white hover:opacity-90 transition-opacity cursor-pointer"}`}
+                    onClick={() => navigateDay(day.id)}
+                    className={
+                      "rounded-full text-sm font-medium bg-green-600 text-white hover:opacity-90 transition-opacity cursor-pointer"
+                    }
                     style={{
                       cursor: "pointer",
                       paddingInline: "0.75rem",
                       paddingBlock: "0.375rem",
                     }}
                   >
-                    {day.isDayOff ? "Closed" : "Open"}
+                    Open
                   </button>
                 </div>
               </div>
