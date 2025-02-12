@@ -183,18 +183,8 @@ export const ForgotPassword: React.FC = () => {
                     setEmail(e.target.value);
                   }}
                 />
-                {/* <CustomInput
-                  label="Password"
-                  type="password"
-                  placeholder="Enter your password"
-                  style={{ marginBottom: "10px", paddingLeft: "10px" }}
-                />
-                <CustomInput
-                  label="Confirm Password"
-                  type="password"
-                  placeholder="Confirm your password"
-                  style={{ marginBottom: "10px", paddingLeft: "10px" }}
-                /> */}
+                {stateSuccess && <p>{stateSuccess}</p>}
+                {stateError && <p>{stateError}</p>}
                 <CustomButton
                   variantColor="green"
                   size="big"
@@ -236,8 +226,6 @@ export const ForgotPassword: React.FC = () => {
                 Take me to Login
               </CustomButton>
             </div>
-            {stateSuccess && <p>{stateSuccess}</p>}
-            {stateError && <p>{stateError}</p>}
           </div>
         </div>
       </div>

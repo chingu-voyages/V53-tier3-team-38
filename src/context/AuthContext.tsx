@@ -20,11 +20,24 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   async function signUpNewUser(
     email: string,
     password: string,
+    displayName?: string,
   ): Promise<AuthResponseCustom> {
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
+    let registerData =
+      displayName === ""
+        ? {
+            email: email,
+            password: password,
+          }
+        : {
+            email: email,
+            password: password,
+            options: {
+              data: {
+                display_name: displayName,
+              },
+            },
+          };
+    const { data, error } = await supabase.auth.signUp(registerData);
 
     if (error) {
       console.error("Error on sign-up: ", error);

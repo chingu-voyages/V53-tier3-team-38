@@ -8,9 +8,23 @@ import {
   Utensils,
 } from "lucide-react";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 export const Sidebar: React.FC = () => {
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleSignOut(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    try {
+      await signOut();
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <aside
       className="hidden md:flex w-64 flex-col"
@@ -108,6 +122,7 @@ export const Sidebar: React.FC = () => {
             paddingInline: "1rem",
             paddingBlock: "0.5rem",
           }}
+          onClick={handleSignOut}
         >
           <LogOut className="w-5 h-5" />
           Logout

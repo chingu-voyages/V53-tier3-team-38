@@ -28,7 +28,7 @@ const features = [
 ];
 
 export const Register: React.FC = () => {
-  const [, setFullName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,7 +43,7 @@ export const Register: React.FC = () => {
     setLoading(true);
 
     try {
-      const result = await signUpNewUser(email, password);
+      const result = await signUpNewUser(email, password, fullName);
 
       if (result?.success) {
         navigate("/dashboard/");

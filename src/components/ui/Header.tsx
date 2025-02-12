@@ -1,22 +1,9 @@
 import { Bell, MenuIcon } from "lucide-react";
 import React from "react";
-
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 
 export const Header: React.FC = () => {
-  const { session, signOut } = useAuth();
-  const navigate = useNavigate();
-
-  async function handleSignOut(e: React.MouseEvent<HTMLButtonElement>) {
-    e.preventDefault();
-    try {
-      await signOut();
-      navigate("/login");
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const { session } = useAuth();
 
   return (
     <header
@@ -55,18 +42,10 @@ export const Header: React.FC = () => {
               className="font-medium"
               style={{ color: "#2C3E50", pointerEvents: "none" }}
             >
-              John Cooper
+              {session?.user?.email}
             </span>
           </div>
         </div>
-        <>
-          <h2>Welcome, {session?.user?.email}</h2>
-          <div>
-            <button onClick={handleSignOut} className="sign-out-button">
-              Sign out
-            </button>
-          </div>
-        </>
       </div>
     </header>
   );

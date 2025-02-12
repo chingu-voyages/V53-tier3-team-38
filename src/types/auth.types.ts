@@ -19,6 +19,7 @@ export type SupabaseContext = {
   signUpNewUser: (
     email: string,
     password: string,
+    displayName: string,
   ) => Promise<AuthResponseCustom> | null;
   signInUser: (
     email: string,
