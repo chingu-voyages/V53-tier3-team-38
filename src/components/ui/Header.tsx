@@ -42,7 +42,10 @@ export const Header: React.FC = () => {
               className="font-medium"
               style={{ color: "#2C3E50", pointerEvents: "none" }}
             >
-              {session?.user?.email}
+              {session?.user?.user_metadata &&
+              session?.user?.user_metadata.display_name
+                ? session?.user?.user_metadata.display_name
+                : session?.user?.email}
             </span>
           </div>
         </div>
