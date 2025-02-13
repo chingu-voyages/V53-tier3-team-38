@@ -24,7 +24,7 @@ export interface CustomInputProps
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
-  ({ className, type, label, error, ...props }, ref) => {
+  ({ className, type, label, error, onChange, ...props }, ref) => {
     const [value, setValue] = React.useState("");
     const [touched, setTouched] = React.useState(false);
     const [errorMessage, setErrorMessage] = React.useState("");
@@ -59,6 +59,7 @@ const CustomInput = React.forwardRef<HTMLInputElement, CustomInputProps>(
       if (touched) {
         validate(e.target.value);
       }
+      onChange?.(e);
     };
 
     const handleBlur = () => {

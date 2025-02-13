@@ -1,36 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChefHat, Check } from "lucide-react";
 import { CustomInput } from "@/components/reusableComponents/customInput";
 import { CustomButton } from "@/components/reusableComponents/customButton";
+import supabase from "@/supabase-client";
+import { useAuth } from "@/context/AuthContext";
+
+const features = [
+  {
+    title: "Menu Planning Made Easy",
+    description:
+      "Create and manage your menus efficiently with our intuitive scheduling tools.",
+  },
+  {
+    title: "Dietary Management",
+    description:
+      "Track and manage dietary restrictions and allergies with ease.",
+  },
+  {
+    title: "Team Collaboration",
+    description: "Work seamlessly with your kitchen staff and management team.",
+  },
+  {
+    title: "Inventory Control",
+    description:
+      "Keep track of ingredients and supplies with automated inventory management.",
+  },
+];
 
 export const ForgotPassword: React.FC = () => {
-  const features = [
-    {
-      title: "Menu Planning Made Easy",
-      description:
-        "Create and manage your menus efficiently with our intuitive scheduling tools.",
-    },
-    {
-      title: "Dietary Management",
-      description:
-        "Track and manage dietary restrictions and allergies with ease.",
-    },
-    {
-      title: "Team Collaboration",
-      description:
-        "Work seamlessly with your kitchen staff and management team.",
-    },
-    {
-      title: "Inventory Control",
-      description:
-        "Keep track of ingredients and supplies with automated inventory management.",
-    },
-  ];
+  const [email, setEmail] = useState("");
+  const [stateSuccess, setStateSuccess] = useState("");
+  const [stateError, setStateError] = useState("");
+  const [stateLoading, setStateLoading] = useState(false);
+  const { validateEmail } = useAuth();
 
-  const handleResetPassword = () => {
-    // Reset password logic here
-    console.log("Reset password");
-  };
+  async function handleResetPassword() {
+    if (!validateEmail(email)) {
+      setStateError("Please enter a valid email");
+      return;
+    }
+
+    try {
+      setStateLoading(true);
+      let { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${import.meta.env.VITE_APP_URL}/reset-password`,
+      });
+
+      if (error) {
+        setStateError(error.message);
+      } else if (data) {
+        setStateSuccess("Reset email has been sent to your inbox.");
+      }
+    } catch (error) {
+      // Run any email validation here
+      console.error(error);
+      setStateError("Error from Supabase");
+    } finally {
+      setStateLoading(false);
+    }
+  }
 
   return (
     <div
@@ -151,24 +179,18 @@ export const ForgotPassword: React.FC = () => {
                   type="email"
                   placeholder="Enter your email"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 />
-                <CustomInput
-                  label="Password"
-                  type="password"
-                  placeholder="Enter your password"
-                  style={{ marginBottom: "10px", paddingLeft: "10px" }}
-                />
-                <CustomInput
-                  label="Confirm Password"
-                  type="password"
-                  placeholder="Confirm your password"
-                  style={{ marginBottom: "10px", paddingLeft: "10px" }}
-                />
+                {stateSuccess && <p>{stateSuccess}</p>}
+                {stateError && <p>{stateError}</p>}
                 <CustomButton
                   variantColor="green"
                   size="big"
                   style={{ marginTop: "10px", cursor: "pointer" }}
                   onClick={handleResetPassword}
+                  disabled={stateLoading}
                 >
                   Submit
                 </CustomButton>

@@ -1,12 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import { ChefHat, Check } from "lucide-react";
 import { CustomInput } from "@/components/reusableComponents/customInput";
 import { CustomButton } from "@/components/reusableComponents/customButton";
-import { useNavigate } from "react-router-dom";
-
-interface LoginProps {
-  onLogin: () => void;
-}
 
 const features = [
   {
@@ -30,25 +27,52 @@ const features = [
   },
 ];
 
-export const Login: React.FC<LoginProps> = ({ onLogin }) => {
+export const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const handleLoginClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    // Perform login logic here
-    onLogin();
-    navigate("/dashboard");
-  };
+
+  const { session, signInUser, signInUserGoogle } = useAuth();
+  console.log(session);
+
+  async function handleEmailLogin() {
+    setLoading(true);
+
+    try {
+      const result = await signInUser(email, password);
+
+      if (result?.success) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setError(`Error on handleSignIn ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogleLogin() {
+    setLoading(true);
+
+    try {
+      const result = await signInUserGoogle();
+
+      if (result?.success) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setError(`Error on handleSignIn ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleDemoLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     // Perform demo login logic here
     console.log("Demo login");
-  };
-
-  const handleGoogleLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    // Perform Google login logic here
-    console.log("Google login");
   };
 
   return (
@@ -170,12 +194,18 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   type="email"
                   placeholder="Enter your email"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 />
                 <CustomInput
                   label="Password"
                   type="password"
                   placeholder="Enter your password"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                 />
                 <div className="flex justify-end">
                   <a
@@ -190,7 +220,8 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   variantColor="green"
                   size="big"
                   style={{ marginTop: "10px", cursor: "pointer" }}
-                  onClick={handleLoginClick}
+                  disabled={loading}
+                  onClick={handleEmailLogin}
                 >
                   Sign in
                 </CustomButton>
@@ -253,6 +284,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   Sign up
                 </a>
               </p>
+              {error && <p>{error}</p>}
             </div>
           </div>
         </div>

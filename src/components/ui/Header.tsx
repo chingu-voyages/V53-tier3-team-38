@@ -1,7 +1,10 @@
 import { Bell, MenuIcon } from "lucide-react";
 import React from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export const Header: React.FC = () => {
+  const { session } = useAuth();
+
   return (
     <header
       className="flex items-center justify-between"
@@ -39,7 +42,10 @@ export const Header: React.FC = () => {
               className="font-medium"
               style={{ color: "#2C3E50", pointerEvents: "none" }}
             >
-              John Cooper
+              {session?.user?.user_metadata &&
+              session?.user?.user_metadata.display_name
+                ? session?.user?.user_metadata.display_name
+                : session?.user?.email}
             </span>
           </div>
         </div>

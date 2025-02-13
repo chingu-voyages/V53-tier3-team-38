@@ -1,41 +1,75 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import { ChefHat, Check } from "lucide-react";
 import { CustomInput } from "@/components/reusableComponents/customInput";
 import { CustomButton } from "@/components/reusableComponents/customButton";
 
+const features = [
+  {
+    title: "Menu Planning Made Easy",
+    description:
+      "Create and manage your menus efficiently with our intuitive scheduling tools.",
+  },
+  {
+    title: "Dietary Management",
+    description:
+      "Track and manage dietary restrictions and allergies with ease.",
+  },
+  {
+    title: "Team Collaboration",
+    description: "Work seamlessly with your kitchen staff and management team.",
+  },
+  {
+    title: "Inventory Control",
+    description:
+      "Keep track of ingredients and supplies with automated inventory management.",
+  },
+];
+
 export const Register: React.FC = () => {
-  const handleSignup = () => {
-    // Perform signup logic here
-    console.log("Signup");
-  };
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleGoogleSignUp = () => {
-    // Perform Google login logic here
-    console.log("Google signup");
-  };
+  const { session, signUpNewUser, signInUserGoogle } = useAuth();
+  console.log(session);
 
-  const features = [
-    {
-      title: "Menu Planning Made Easy",
-      description:
-        "Create and manage your menus efficiently with our intuitive scheduling tools.",
-    },
-    {
-      title: "Dietary Management",
-      description:
-        "Track and manage dietary restrictions and allergies with ease.",
-    },
-    {
-      title: "Team Collaboration",
-      description:
-        "Work seamlessly with your kitchen staff and management team.",
-    },
-    {
-      title: "Inventory Control",
-      description:
-        "Keep track of ingredients and supplies with automated inventory management.",
-    },
-  ];
+  async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const result = await signUpNewUser(email, password, fullName);
+
+      if (result?.success) {
+        navigate("/dashboard/");
+      }
+    } catch (error) {
+      setError(`Error on handleSignUp ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogleLogin() {
+    setLoading(true);
+
+    try {
+      const result = await signInUserGoogle();
+
+      if (result?.success) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setError(`Error on handleSignIn ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -85,24 +119,33 @@ export const Register: React.FC = () => {
               >
                 Create your account
               </h2>
-              <form className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSignup}>
                 <CustomInput
                   label="Full Name"
                   type="text"
                   placeholder="Enter your name"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                  }}
                 />
                 <CustomInput
                   label="Email address"
                   type="email"
                   placeholder="Enter your email"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                  }}
                 />
                 <CustomInput
                   label="Password"
                   type="password"
                   placeholder="Create your password"
                   style={{ marginBottom: "10px", paddingLeft: "10px" }}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                 />
                 <CustomInput
                   label="Confirm Password"
@@ -114,11 +157,13 @@ export const Register: React.FC = () => {
                   variantColor="green"
                   size="big"
                   style={{ marginTop: "10px", cursor: "pointer" }}
-                  onClick={handleSignup}
+                  type="submit"
+                  disabled={loading}
                 >
                   Create Account
                 </CustomButton>
               </form>
+              {error && <p>{error}</p>}
               <div className="relative mt-8 mb-4">
                 <div className="absolute inset-0 flex items-center">
                   <div
@@ -145,7 +190,7 @@ export const Register: React.FC = () => {
                 icon="gmail"
                 size="big"
                 style={{ cursor: "pointer" }}
-                onClick={handleGoogleSignUp}
+                onClick={handleGoogleLogin}
               >
                 Google
               </CustomButton>

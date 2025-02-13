@@ -9,38 +9,36 @@ import {
 import { Login } from "./pages/Login";
 import { Register } from "./pages/Register";
 import { ForgotPassword } from "./pages/ForgotPassword";
+import { ResetPassword } from "./pages/ResetPassword.tsx";
 import { Dashboard } from "./pages/Dashboard";
-import { useState } from "react";
-import { AuthWrapper } from "./components/authWrapper/AuthWrapper";
+import { ProtectedRoute } from "./components/protectedRoute/ProtectedRoute";
+import { AuthContextProvider } from "./context/AuthContext.tsx";
+import NotFound from "./pages/NotFound.tsx";
 import { ComponentSamplePage } from "./pages/componentSamplePage/ComponentSamplePage";
 
 export const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const handleLogin = () => {
-    // Login logic here
-    setIsAuthenticated(true);
-  };
-
   return (
-    <>
+    <AuthContextProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/components" element={<ComponentSamplePage />} />
           <Route
             path="/dashboard/*"
             element={
-              <AuthWrapper isAuthenticated={isAuthenticated}>
+              <ProtectedRoute>
                 <Dashboard />
-              </AuthWrapper>
+              </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="404" element={<NotFound />} />
+          <Route path="*" element={<Navigate to="/404" />} />
         </Routes>
       </Router>
-    </>
+    </AuthContextProvider>
   );
 };
