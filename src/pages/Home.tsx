@@ -2,6 +2,7 @@ import React from "react";
 import { DailyCard } from "@/components/reusableComponents/dailyCard";
 import { StatusCard } from "@/components/reusableComponents/statusCard";
 import { AlertCircle, Calendar, ChefHat, Settings } from "lucide-react";
+// import { getRoles } from "@/services/userManagement";
 
 type DailyCardProps = {
   day: string;
@@ -75,6 +76,16 @@ const quickButtons = [
 ];
 
 export const Home: React.FC = () => {
+  // const [roles, setRoles] = useState([]);
+  // useEffect(() => {
+  //   async function fetchRoles() {
+  //     const roles = await getRoles();
+  //     setRoles(roles);
+  //   }
+
+  //   fetchRoles();
+  // }, []);
+
   return (
     <section style={{ padding: "1rem" }}>
       <div className="flex flex-wrap gap-6">
