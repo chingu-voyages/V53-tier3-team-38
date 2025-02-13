@@ -1,17 +1,19 @@
+DROP TABLE IF EXISTS public.TodoList CASCADE;
+
 -- Create users table (uncomment if needed)
-CREATE TABLE IF NOT EXISTS auth.users (
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
-    display_name text,
-    email varchar,
-    phone text,
-    raw_app_meta_data jsonb,
-    last_sign_in_at timestamptz,
-    created_at timestamptz,
-    updated_at timestamptz,
-    email_confirmed_at timestamptz,
-    deleted_at timestamptz,
-    CONSTRAINT users_pk PRIMARY KEY (id)
-);
+-- CREATE TABLE IF NOT EXISTS auth.users (
+--     id uuid NOT NULL DEFAULT gen_random_uuid(),
+--     display_name text,
+--     email varchar,
+--     phone text,
+--     raw_app_meta_data jsonb,
+--     last_sign_in_at timestamptz,
+--     created_at timestamptz,
+--     updated_at timestamptz,
+--     email_confirmed_at timestamptz,
+--     deleted_at timestamptz,
+--     CONSTRAINT users_pk PRIMARY KEY (id)
+-- );
 
 -- Create roles enum type
 CREATE TYPE public.roles_enum AS ENUM ('admin', 'manager', 'staff');
