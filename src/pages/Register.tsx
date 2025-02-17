@@ -271,8 +271,8 @@ export const Register: React.FC = () => {
                 size="medium"
                 style={{ cursor: "pointer" }}
                 onClick={() =>
-                (window.location.href =
-                  "https://github.com/chingu-voyages/V53-tier3-team-38")
+                  (window.location.href =
+                    "https://github.com/chingu-voyages/V53-tier3-team-38")
                 }
               >
                 GitHub
