@@ -215,7 +215,7 @@ export const Register: React.FC = () => {
             </div>
             {/* Right side - Features */}
             <div
-              className="p-8 gap-6 rounded-r-xl flex flex-col justify-center h-full"
+              className="hidden sm:hidden md:flex p-8 gap-6 rounded-r-xl flex-col justify-center h-full"
               style={{
                 backgroundColor: "#F8FAFC",
                 padding: "0 20px 0 20px",
@@ -271,8 +271,8 @@ export const Register: React.FC = () => {
                 size="medium"
                 style={{ cursor: "pointer" }}
                 onClick={() =>
-                  (window.location.href =
-                    "https://github.com/chingu-voyages/V53-tier3-team-38")
+                (window.location.href =
+                  "https://github.com/chingu-voyages/V53-tier3-team-38")
                 }
               >
                 GitHub
