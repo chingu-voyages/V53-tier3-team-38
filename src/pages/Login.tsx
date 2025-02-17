@@ -34,8 +34,7 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { session, signInUser, signInUserGoogle } = useAuth();
-  console.log(session);
+  const { signInUser, signInUserGoogle } = useAuth();
 
   async function handleEmailLogin() {
     setLoading(true);
@@ -150,8 +149,8 @@ export const Login: React.FC = () => {
                 size="medium"
                 style={{ cursor: "pointer" }}
                 onClick={() =>
-                  (window.location.href =
-                    "https://github.com/chingu-voyages/V53-tier3-team-38")
+                (window.location.href =
+                  "https://github.com/chingu-voyages/V53-tier3-team-38")
                 }
               >
                 GitHub

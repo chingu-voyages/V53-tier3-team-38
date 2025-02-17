@@ -35,8 +35,7 @@ export const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { session, signUpNewUser, signInUserGoogle } = useAuth();
-  console.log(session);
+  const { signUpNewUser, signInUserGoogle } = useAuth();
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -272,8 +271,8 @@ export const Register: React.FC = () => {
                 size="medium"
                 style={{ cursor: "pointer" }}
                 onClick={() =>
-                  (window.location.href =
-                    "https://github.com/chingu-voyages/V53-tier3-team-38")
+                (window.location.href =
+                  "https://github.com/chingu-voyages/V53-tier3-team-38")
                 }
               >
                 GitHub
