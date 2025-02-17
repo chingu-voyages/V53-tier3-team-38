@@ -54,8 +54,9 @@ export const Sidebar: React.FC = () => {
         )}
       </button>
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:relative md:translate-x-0 transition-transform duration-300 ease-in-out`}
+        className={`fixed inset-y-0 left-0 z-40 w-64 transform ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:relative md:translate-x-0 transition-transform duration-300 ease-in-out`}
         style={{
           backgroundColor: "#FFFFFF",
           padding: "1rem",
@@ -79,9 +80,10 @@ export const Sidebar: React.FC = () => {
           <NavLink
             to="/dashboard/home"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-lg transition-colors ${isActive
-                ? "bg-[#27AE60] text-[#F8F9F9]"
-                : "hover:bg-gray-400 text-[#2C3E50]"
+              `flex items-center gap-2 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-[#27AE60] text-[#F8F9F9]"
+                  : "hover:bg-gray-400 text-[#2C3E50]"
               }`
             }
             style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
@@ -93,9 +95,10 @@ export const Sidebar: React.FC = () => {
           <NavLink
             to="/dashboard/manage-menus"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-lg transition-colors ${isActive
-                ? "bg-[#27AE60] text-[#F8F9F9]"
-                : "hover:bg-gray-400 text-[#2C3E50]"
+              `flex items-center gap-2 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-[#27AE60] text-[#F8F9F9]"
+                  : "hover:bg-gray-400 text-[#2C3E50]"
               }`
             }
             style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
@@ -107,9 +110,10 @@ export const Sidebar: React.FC = () => {
           <NavLink
             to="/dashboard/browse-dishes"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-lg transition-colors ${isActive
-                ? "bg-[#27AE60] text-[#F8F9F9]"
-                : "hover:bg-gray-400 text-[#2C3E50]"
+              `flex items-center gap-2 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-[#27AE60] text-[#F8F9F9]"
+                  : "hover:bg-gray-400 text-[#2C3E50]"
               }`
             }
             style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
@@ -121,9 +125,10 @@ export const Sidebar: React.FC = () => {
           <NavLink
             to="/dashboard/allergies"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-lg transition-colors ${isActive
-                ? "bg-[#27AE60] text-[#F8F9F9]"
-                : "hover:bg-gray-400 text-[#2C3E50]"
+              `flex items-center gap-2 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-[#27AE60] text-[#F8F9F9]"
+                  : "hover:bg-gray-400 text-[#2C3E50]"
               }`
             }
             style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
@@ -135,9 +140,10 @@ export const Sidebar: React.FC = () => {
           <NavLink
             to="/dashboard/settings"
             className={({ isActive }) =>
-              `flex items-center gap-2 rounded-lg transition-colors ${isActive
-                ? "bg-[#27AE60] text-[#F8F9F9]"
-                : "hover:bg-gray-400 text-[#2C3E50]"
+              `flex items-center gap-2 rounded-lg transition-colors ${
+                isActive
+                  ? "bg-[#27AE60] text-[#F8F9F9]"
+                  : "hover:bg-gray-400 text-[#2C3E50]"
               }`
             }
             style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
