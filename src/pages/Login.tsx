@@ -34,8 +34,8 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { session, signInUser, signInUserGoogle } = useAuth();
-  console.log(session);
 
   async function handleEmailLogin() {
     setLoading(true);
@@ -69,11 +69,22 @@ export const Login: React.FC = () => {
     }
   }
 
-  const handleDemoLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
+  async function handleDemoLogin(event: React.MouseEvent) {
     event.preventDefault();
-    // Perform demo login logic here
-    console.log("Demo login");
-  };
+    setLoading(true);
+
+    try {
+      const result = await signInUser("email@email.com", "password");
+
+      if (result?.success) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setError(`Error on handleSignIn ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
@@ -94,7 +105,7 @@ export const Login: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-8 h-full p-1">
             {/* Left side - Features */}
             <div
-              className="p-8 gap-6 rounded-r-xl flex flex-col justify-center h-full"
+              className="hidden sm:hidden md:flex p-8 gap-6 rounded-r-xl flex-col justify-center h-full"
               style={{
                 backgroundColor: "#F8FAFC",
                 padding: "0 20px 0 20px",
@@ -159,8 +170,10 @@ export const Login: React.FC = () => {
             </div>
             {/* Right side - Login Form */}
             <div
-              className="p-8 flex flex-col justify-center h-full gap-6"
-              style={{ padding: "0 40px 0 20px" }}
+              className="flex flex-col justify-center h-full gap-6"
+              style={{
+                padding: "0 40px 0 20px",
+              }}
             >
               <div className="flex items-center gap-3 mb-6">
                 <ChefHat
