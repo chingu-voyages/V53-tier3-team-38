@@ -70,7 +70,7 @@ export const Sidebar: React.FC = () => {
             className="text-xl font-semibold"
             style={{ color: "#2C3E50", pointerEvents: "none" }}
           >
-            Menu Manager
+            Kitchen Manager
           </h1>
         </div>
         <nav
