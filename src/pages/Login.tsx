@@ -34,8 +34,8 @@ export const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { session, signInUser, signInUserGoogle } = useAuth();
-  console.log(session);
 
   async function handleEmailLogin() {
     setLoading(true);
@@ -69,11 +69,22 @@ export const Login: React.FC = () => {
     }
   }
 
-  const handleDemoLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
+  async function handleDemoLogin(event: React.MouseEvent) {
     event.preventDefault();
-    // Perform demo login logic here
-    console.log("Demo login");
-  };
+    setLoading(true);
+
+    try {
+      const result = await signInUser("email@email.com", "password");
+
+      if (result?.success) {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      setError(`Error on handleSignIn ${error}`);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div
