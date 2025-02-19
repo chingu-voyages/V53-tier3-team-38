@@ -35,8 +35,7 @@ export const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { session, signUpNewUser, signInUserGoogle } = useAuth();
-  console.log(session);
+  const { signUpNewUser, signInUserGoogle } = useAuth();
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -216,7 +215,7 @@ export const Register: React.FC = () => {
             </div>
             {/* Right side - Features */}
             <div
-              className="p-8 gap-6 rounded-r-xl flex flex-col justify-center h-full"
+              className="hidden sm:hidden md:flex p-8 gap-6 rounded-r-xl flex-col justify-center h-full"
               style={{
                 backgroundColor: "#F8FAFC",
                 padding: "0 20px 0 20px",
