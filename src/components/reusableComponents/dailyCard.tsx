@@ -14,6 +14,8 @@ export const DailyCard: React.FC<DailyCardProps> = ({
   mealTitle,
   dishCount,
 }) => {
+  const formatDate = new Date(date);
+
   return (
     <div
       className="flex items-center justify-between bg-[#ECF0F1] rounded-lg w-full max-w-sm"
@@ -25,11 +27,13 @@ export const DailyCard: React.FC<DailyCardProps> = ({
       >
         <div className="text-center pointer-events-none">
           <div className="font-semibold">{day}</div>
-          <div className="text-large">{date}</div>
+          <div className="whitespace-nowrap text-md">
+            {`${formatDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}`}
+          </div>
         </div>
         <div className="pointer-events-none">
           <div className="font-medium">{mealTitle}</div>
-          <div className="text-large text-gray-600">{dishCount} Dishes</div>
+          <div className="text-sm text-gray-600">{dishCount} Dishes</div>
         </div>
       </div>
       <CustomButton size="small" variantColor="green">
