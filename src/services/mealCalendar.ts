@@ -1,7 +1,10 @@
 import supabase from "@/supabase-client";
 
 export async function getMealCalendar() {
-  const { data, error } = await supabase.from("meals_calendar").select("*");
+  const { data, error } = await supabase
+    .from("fetch_dashboard_data")
+    .select("*")
+    .order("date");
   if (error) throw error;
   return data;
 }
