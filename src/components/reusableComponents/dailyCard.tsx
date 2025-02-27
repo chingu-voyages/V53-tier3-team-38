@@ -1,12 +1,6 @@
 import type React from "react";
 import { CustomButton } from "./customButton";
-
-interface DailyCardProps {
-  day: string;
-  date: number;
-  mealTitle: string;
-  dishCount: number;
-}
+import { DailyCardProps } from "@/types/database.types";
 
 export const DailyCard: React.FC<DailyCardProps> = ({
   day,

@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Plus, Edit2, Trash2, X, AlertCircle, Check } from "lucide-react";
-import { getDishes } from "@/services/dish";
-interface Dish {
-  name: string;
-  ingredients: string[];
-  calories: number;
-  allergens: string[];
-}
+import dishService from "@/services/dish";
+import { Dish } from "@/types/database.types";
 
 export const BrowseDishes: React.FC = () => {
   const [dishes, setDishes] = useState<Dish[]>([]);
@@ -19,7 +14,7 @@ export const BrowseDishes: React.FC = () => {
   } | null>(null);
   useEffect(() => {
     async function fetchDishes() {
-      const data = await getDishes();
+      const data = await dishService.getDishes();
       setDishes(data);
     }
 
@@ -134,7 +129,7 @@ export const BrowseDishes: React.FC = () => {
                   className="text-sm text-gray-500"
                   style={{ marginTop: "0.5rem" }}
                 >
-                  {dish.ingredients.join(", ")}
+                  {dish.ingredients?.join(", ")}
                 </p>
                 <div
                   className="flex items-center gap-2"
@@ -143,7 +138,7 @@ export const BrowseDishes: React.FC = () => {
                   <span className="text-sm font-medium text-gray-600">
                     {dish.calories} calories
                   </span>
-                  {dish.allergens.length > 0 && (
+                  {dish.allergens && dish.allergens.length > 0 && (
                     <span
                       className="text-xs bg-yellow-100 text-yellow-800 rounded-full"
                       style={{
@@ -155,7 +150,7 @@ export const BrowseDishes: React.FC = () => {
                     </span>
                   )}
                 </div>
-                {dish.allergens.length > 0 && (
+                {dish.allergens && dish.allergens.length > 0 && (
                   <p
                     className="text-sm text-yellow-600"
                     style={{ marginTop: "0.5rem" }}
@@ -307,7 +302,7 @@ function DishFormModal({
             </label>
             <input
               type="text"
-              value={formData.ingredients.toString()}
+              value={formData.ingredients?.toString()}
               onChange={(e) => {
                 const value = e.target.value;
                 const ingredientsArray = value.split(",");
@@ -352,7 +347,7 @@ function DishFormModal({
             </label>
             <input
               type="text"
-              value={formData.allergens.toString()}
+              value={formData.allergens?.toString()}
               onChange={(e) => {
                 const value = e.target.value;
                 const allergensArray = value.split(",");

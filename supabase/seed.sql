@@ -82,3 +82,12 @@ INSERT INTO public.dish_ingredients (dish_name, ingredient_name) VALUES
     ('Grilled Chicken', 'Chicken'),
     ('Grilled Chicken', 'Herbs'),
     ('Grilled Chicken', 'Olive Oil');
+
+-- INSERT INTO public.user_details (user_id, display_name, avatar_url) VALUES
+--     ('0b1ea542-54b2-41dc-a360-8505820c8cae', 'Sarah Johnson', 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'),
+--     ('46239a0f-8ec8-4d29-bfab-13090365439a', 'Mike Chen', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80');
+
+-- INSERT INTO public.user_allergens (user_id, allergen_name, notes) VALUES 
+--     ('0b1ea542-54b2-41dc-a360-8505820c8cae', 'Shellfish', 'Avoid all seafood contact'),
+--     ('0b1ea542-54b2-41dc-a360-8505820c8cae', 'Peanuts', 'Including peanut oil'),
+--     ('46239a0f-8ec8-4d29-bfab-13090365439a', 'Dairy', 'Lactose intolerant');

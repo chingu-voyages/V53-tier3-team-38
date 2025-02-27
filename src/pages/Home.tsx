@@ -2,15 +2,8 @@ import React, { useEffect, useState } from "react";
 import { DailyCard } from "@/components/reusableComponents/dailyCard";
 import { StatusCard } from "@/components/reusableComponents/statusCard";
 import { AlertCircle, Calendar, ChefHat, Settings } from "lucide-react";
-import { getMealCalendar } from "@/services/mealCalendar";
-// import { getRoles } from "@/services/userManagement";
-
-type DailyCardProps = {
-  day: string;
-  date: number;
-  mealtitle: string;
-  dishcount: number;
-};
+import mealCalendarService from "@/services/mealCalendar";
+import { DailyCardProps } from "@/types/database.types";
 
 const quickButtons = [
   {
@@ -32,19 +25,10 @@ const quickButtons = [
 ];
 
 export const Home: React.FC = () => {
-  // const [roles, setRoles] = useState([]);
-  // useEffect(() => {
-  //   async function fetchRoles() {
-  //     const roles = await getRoles();
-  //     setRoles(roles);
-  //   }
-
-  //   fetchRoles();
-  // }, []);
   const [dailyData, setDailyData] = useState<DailyCardProps[]>([]);
   useEffect(() => {
     async function fetchData() {
-      const data = await getMealCalendar();
+      const data = await mealCalendarService.getDashboardData();
       setDailyData(data);
     }
 
@@ -81,8 +65,8 @@ export const Home: React.FC = () => {
               <DailyCard
                 date={day.date}
                 day={day.day}
-                mealTitle={day.mealtitle}
-                dishCount={day.dishcount}
+                mealTitle={day.mealTitle}
+                dishCount={day.dishCount}
                 key={day.day}
               />
             ))}
