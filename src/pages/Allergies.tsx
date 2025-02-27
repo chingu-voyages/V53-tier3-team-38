@@ -417,7 +417,8 @@ function AllergyFormModal({
                 );
                 onChangeWorker(selectedWorker || null);
               }}
-              className="w-full rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              disabled={allergy !== null}
+              className={`w-full rounded-lg border border-gray-200 ${allergy !== null && "bg-gray-200"} focus:outline-none focus:ring-2 focus:ring-green-500`}
               style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
               required
             >

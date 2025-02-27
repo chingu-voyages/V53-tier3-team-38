@@ -33,7 +33,7 @@ export const Home: React.FC = () => {
     }
 
     fetchData();
-  });
+  }, []);
 
   return (
     <section style={{ padding: "1rem" }}>
