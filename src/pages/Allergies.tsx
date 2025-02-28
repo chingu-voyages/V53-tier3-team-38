@@ -111,6 +111,10 @@ export const Allergies = () => {
         worker.name,
         error,
       );
+      setMessage({
+        type: "error",
+        text: "Ran into an error deleting allergy",
+      });
     }
     setWorkerAllergies(
       userService.removeAllergenForWorker(

@@ -20,14 +20,45 @@ export const BrowseDishes: React.FC = () => {
 
     fetchDishes();
   }, []);
-  const handleSave = (dish: Dish) => {
-    if (editingDish) {
-      setDishes((prev) => prev.map((d) => (d.name === dish.name ? dish : d)));
+
+  const handleSave = async (dish: Dish, oldName?: string) => {
+    if (editingDish && oldName) {
+      try {
+        await dishService.updateDish(oldName, dish);
+      } catch (error) {
+        console.error(`Error updating dish %s: %s`, dish.name, error);
+        setMessage({
+          type: "error",
+          text: "There was an error updating the dish",
+        });
+      }
+      setDishes((prev) => prev.map((d) => (d.name === oldName ? dish : d)));
       setMessage({
         type: "success",
         text: "Dish updated successfully!",
       });
     } else {
+      // Check to see if name already exists in dishes
+      const isDuplicate = dishes.some((d) => d.name === dish.name);
+      if (isDuplicate) {
+        setMessage({
+          type: "error",
+          text: "This dish already exists",
+        });
+        setTimeout(() => setMessage(null), 3000);
+        return;
+      }
+
+      // Otherwise proceed with creating new dish
+      try {
+        await dishService.createDish(dish);
+      } catch (error) {
+        console.error(`Error creating dish %s: %s`, dish.name, error);
+        setMessage({
+          type: "error",
+          text: "There was an error creating the dish",
+        });
+      }
       setDishes((prev) => [
         ...prev,
         {
@@ -43,7 +74,21 @@ export const BrowseDishes: React.FC = () => {
     setIsCreating(false);
     setTimeout(() => setMessage(null), 3000);
   };
-  const handleDelete = (name: string) => {
+
+  const handleDelete = async (name: string) => {
+    try {
+      await dishService.deleteDish(name);
+    } catch (error) {
+      console.error(
+        "There was an error trying to remove dish %s: %s",
+        name,
+        error,
+      );
+      setMessage({
+        type: "error",
+        text: "Ran into an error deleting dish",
+      });
+    }
     setDishes((prev) => prev.filter((dish) => dish.name !== name));
     setDeletingDish(null);
     setMessage({
@@ -52,6 +97,7 @@ export const BrowseDishes: React.FC = () => {
     });
     setTimeout(() => setMessage(null), 3000);
   };
+
   return (
     <div
       className="w-full"
@@ -228,7 +274,7 @@ function DishFormModal({
 }: {
   dish: Dish | null;
   onClose: () => void;
-  onSave: (dish: Dish) => void;
+  onSave: (dish: Dish, oldName?: string) => void;
 }) {
   const [formData, setFormData] = useState<Omit<Dish, "id">>({
     name: dish?.name || "",
@@ -238,9 +284,12 @@ function DishFormModal({
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-    });
+    onSave(
+      {
+        ...formData,
+      },
+      dish?.name,
+    );
   };
   return (
     <div

@@ -20,10 +20,7 @@ class DishService {
     return data;
   }
 
-  async createDish(
-    dish: { name: string; calories: number },
-    ingredients: string[],
-  ): Promise<void> {
+  async createDish(dish: Dish): Promise<void> {
     // Start a transaction using supabase functions or handle in multiple steps
     // First create the dish
     const { error: dishError } = await supabase
@@ -33,7 +30,7 @@ class DishService {
     if (dishError) throw dishError;
 
     // Then create dish-ingredient relationships
-    const dishIngredients = ingredients.map((ingredient) => ({
+    const dishIngredients = dish.ingredients?.map((ingredient) => ({
       dish_name: dish.name,
       ingredient_name: ingredient,
     }));
@@ -45,11 +42,7 @@ class DishService {
     if (ingredientsError) throw ingredientsError;
   }
 
-  async updateDish(
-    oldName: string,
-    dish: { name: string; calories: number },
-    ingredients: string[],
-  ): Promise<void> {
+  async updateDish(oldName: string, dish: Dish): Promise<void> {
     // Update the dish
     const { error: dishError } = await supabase
       .from("dishes")
@@ -77,7 +70,7 @@ class DishService {
     if (deleteIngredientsError) throw deleteIngredientsError;
 
     // Add new ingredients
-    const dishIngredients = ingredients.map((ingredient) => ({
+    const dishIngredients = dish.ingredients?.map((ingredient) => ({
       dish_name: dish.name,
       ingredient_name: ingredient,
     }));
