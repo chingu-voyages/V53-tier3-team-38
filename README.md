@@ -1,6 +1,6 @@
 # Voyage-53 Project
 
-**Voyage-Project-Tier3-Menu-Scheduler**
+**Kitchen Manager**
 
 ![Kitchen Manager Dashboard](https://github.com/user-attachments/assets/23482787-78cc-43a6-884a-17ea5cfcdffa)
 
