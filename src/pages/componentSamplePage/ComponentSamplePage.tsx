@@ -160,7 +160,7 @@ export const ComponentSamplePage = () => {
             <h3 className="text-xl font-semibold mb-2">Daily Card</h3>
             <DailyCard
               day="Mon"
-              date={1}
+              date={"2025-01-01"}
               mealTitle="Mediterranean Feast"
               dishCount={3}
             />

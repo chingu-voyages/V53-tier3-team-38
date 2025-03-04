@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Plus,
   Edit2,
@@ -9,130 +9,43 @@ import {
   AlertTriangle,
   Search,
 } from "lucide-react";
-interface Allergy {
-  id: string;
-  workerId: string;
-  type: string;
-  notes?: string;
-}
-interface Worker {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-}
-const mockWorkers: Worker[] = [
-  {
-    id: "1",
-    name: "Sarah Johnson",
-    email: "sarah.j@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "2",
-    name: "Mike Chen",
-    email: "mike.c@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "3",
-    name: "Emily Rodriguez",
-    email: "emily.r@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "4",
-    name: "James Wilson",
-    email: "james.w@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "5",
-    name: "Alice Thompson",
-    email: "alice.t@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "6",
-    name: "David Park",
-    email: "david.p@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "7",
-    name: "Sofia Martinez",
-    email: "sofia.m@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    id: "8",
-    name: "Robert Kim",
-    email: "robert.k@kitchenmanager.com",
-    avatar:
-      "https://images.unsplash.com/photo-1513910367299-bce8d8a0ebf6?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-];
-const mockAllergies: Allergy[] = [
-  {
-    id: "1",
-    workerId: "1",
-    type: "Shellfish",
-    notes: "Avoid all seafood contact",
-  },
-  {
-    id: "2",
-    workerId: "1",
-    type: "Peanuts",
-    notes: "Including peanut oil",
-  },
-  {
-    id: "3",
-    workerId: "2",
-    type: "Dairy",
-    notes: "Lactose intolerant",
-  },
-  {
-    id: "4",
-    workerId: "3",
-    type: "Tree Nuts",
-    notes: "All types of tree nuts",
-  },
-  {
-    id: "5",
-    workerId: "5",
-    type: "Soy",
-    notes: "Including soy sauce",
-  },
-];
+import userService from "@/services/userManagement";
+import { Allergen, UserData } from "@/types/database.types";
+
 export const Allergies = () => {
-  const [allergies, setAllergies] = useState<Allergy[]>(mockAllergies);
-  const [workers] = useState<Worker[]>(mockWorkers);
+  const [workerAllergies, setWorkerAllergies] = useState<UserData[]>([]);
+
   const [searchQuery, setSearchQuery] = useState("");
-  const [editingAllergy, setEditingAllergy] = useState<Allergy | null>(null);
+  const [editingWorker, setEditingWorker] = useState<UserData | null>(null);
+  const [editingAllergy, setEditingAllergy] = useState<Allergen | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [deletingAllergy, setDeletingAllergy] = useState<string | null>(null);
+  const [deletingWorker, setDeletingWorker] = useState<UserData | null>(null);
+  const [deletingAllergy, setDeletingAllergy] = useState<Allergen | null>(null);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
-  const filteredWorkers = workers.filter(
+
+  useEffect(() => {
+    async function fetchAllergenData() {
+      const data = await userService.getUserAllergensView();
+      setWorkerAllergies(data);
+    }
+
+    fetchAllergenData();
+  }, []);
+
+  const filteredWorkers = workerAllergies.filter(
     (worker) =>
       worker.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       worker.email.toLowerCase().includes(searchQuery.toLowerCase()),
   );
-  const handleSave = (allergy: Allergy) => {
-    const isDuplicate = allergies.some(
+  const handleSave = async (worker: UserData, allergen: Allergen) => {
+    const isDuplicate = worker.allergen_info.some(
       (a) =>
-        a.workerId === allergy.workerId &&
-        a.type.toLowerCase() === allergy.type.toLowerCase() &&
-        a.id !== allergy.id,
+        a.name.toLowerCase() === allergen.name.toLowerCase() &&
+        (!editingAllergy ||
+          a.name.toLowerCase() !== editingAllergy.name.toLowerCase()),
     );
     if (isDuplicate) {
       setMessage({
@@ -142,44 +55,83 @@ export const Allergies = () => {
       setTimeout(() => setMessage(null), 3000);
       return;
     }
-    if (editingAllergy) {
-      setAllergies((prev) =>
-        prev.map((a) => (a.id === allergy.id ? allergy : a)),
+
+    try {
+      const response = editingAllergy
+        ? await userService.updateUserAllergen(worker.name, allergen)
+        : await userService.addUserAllergen(worker.name, allergen);
+      if ("success" in response && !response.success) {
+        setMessage({
+          type: "error",
+          text: "Ran into a problem adding allergy",
+        });
+        return;
+      }
+    } catch (error) {
+      console.error(
+        `There was an error trying to ${editingAllergy ? "update" : "add"} allergen %s for worker %s: %s`,
+        allergen.name,
+        worker.name,
+        error,
       );
       setMessage({
-        type: "success",
-        text: "Allergy updated successfully!",
+        type: "error",
+        text: "Ran into a problem adding allergy",
       });
-    } else {
-      setAllergies((prev) => [
-        ...prev,
-        {
-          ...allergy,
-          id: Math.random().toString(36).substr(2, 9),
-        },
-      ]);
-      setMessage({
-        type: "success",
-        text: "Allergy added successfully!",
-      });
+      return;
     }
+    const updatedWorkerAllergies = editingAllergy
+      ? userService.updateAllergenForWorker(
+          workerAllergies,
+          worker.name,
+          allergen,
+        )
+      : userService.addAllergenForWorker(
+          workerAllergies,
+          worker.name,
+          allergen,
+        );
+    setWorkerAllergies(updatedWorkerAllergies);
+    setMessage({
+      type: "success",
+      text: `Allergen ${editingAllergy ? "updated" : "added"} successfully!`,
+    });
     setEditingAllergy(null);
     setIsCreating(false);
     setTimeout(() => setMessage(null), 3000);
   };
-  const handleDelete = (id: string) => {
-    setAllergies((prev) => prev.filter((allergy) => allergy.id !== id));
+
+  const handleDelete = async (worker: UserData, allergen: Allergen) => {
+    try {
+      await userService.removeUserAllergen(worker.name, allergen.name);
+    } catch (error) {
+      console.error(
+        "There was an error trying to remove allergen %s for worker %s: %s",
+        allergen.name,
+        worker.name,
+        error,
+      );
+      setMessage({
+        type: "error",
+        text: "Ran into an error deleting allergy",
+      });
+    }
+    setWorkerAllergies(
+      userService.removeAllergenForWorker(
+        workerAllergies,
+        worker.name,
+        allergen.name,
+      ),
+    );
+    setDeletingWorker(null);
     setDeletingAllergy(null);
     setMessage({
       type: "success",
-      text: "Allergy deleted successfully!",
+      text: "Allergen deleted successfully!",
     });
     setTimeout(() => setMessage(null), 3000);
   };
-  const allergiesByWorker = filteredWorkers.map((worker) => ({
-    worker,
-    allergies: allergies.filter((a) => a.workerId === worker.id),
-  }));
+
   return (
     <div
       className="w-full"
@@ -199,7 +151,7 @@ export const Allergies = () => {
           }}
         >
           <h1 className="text-xl font-semibold text-gray-900">
-            Allergy Management
+            Allergen Management
           </h1>
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -227,7 +179,7 @@ export const Allergies = () => {
               }}
             >
               <Plus className="w-5 h-5" />
-              <span>Add Allergy</span>
+              <span>Add Allergen</span>
             </button>
           </div>
         </div>
@@ -247,10 +199,10 @@ export const Allergies = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           style={{ paddingBottom: "1rem" }}
         >
-          {allergiesByWorker.length > 0 ? (
-            allergiesByWorker.map(({ worker, allergies }) => (
+          {filteredWorkers.length > 0 ? (
+            filteredWorkers.map((worker) => (
               <div
-                key={worker.id}
+                key={worker.name}
                 className="bg-white rounded-lg border border-gray-200"
               >
                 <div
@@ -259,7 +211,7 @@ export const Allergies = () => {
                 >
                   <div className="flex items-center gap-3">
                     <img
-                      src={worker.avatar}
+                      src={worker.avatar_url}
                       alt={worker.name}
                       className="w-10 h-10 rounded-full"
                     />
@@ -272,33 +224,39 @@ export const Allergies = () => {
                   </div>
                 </div>
                 <div className="divide-y divide-gray-200">
-                  {allergies.length > 0 ? (
-                    allergies.map((allergy) => (
+                  {worker.allergen_info.length > 0 ? (
+                    worker.allergen_info.map((allergen) => (
                       <div
-                        key={allergy.id}
+                        key={allergen.name}
                         className="flex items-center justify-between"
                         style={{ padding: "1rem" }}
                       >
                         <div className="space-y-1">
                           <div className="font-medium text-gray-900">
-                            {allergy.type}
+                            {allergen.name}
                           </div>
-                          {allergy.notes && (
+                          {allergen.notes && (
                             <p className="text-sm text-gray-500">
-                              {allergy.notes}
+                              {allergen.notes}
                             </p>
                           )}
                         </div>
                         <div className="flex items-center gap-2">
                           <button
-                            onClick={() => setEditingAllergy(allergy)}
+                            onClick={() => {
+                              setEditingWorker(worker);
+                              setEditingAllergy(allergen);
+                            }}
                             className="text-gray-600 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                             style={{ padding: "0.5rem" }}
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => setDeletingAllergy(allergy.id)}
+                            onClick={() => {
+                              setDeletingWorker(worker);
+                              setDeletingAllergy(allergen);
+                            }}
                             className="text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                             style={{ padding: "0.5rem" }}
                           >
@@ -328,15 +286,25 @@ export const Allergies = () => {
       {(isCreating || editingAllergy) && (
         <AllergyFormModal
           allergy={editingAllergy}
-          workers={workers}
+          worker={editingWorker}
+          workers={filteredWorkers}
           onClose={() => {
+            setEditingWorker(null);
             setEditingAllergy(null);
             setIsCreating(false);
           }}
           onSave={handleSave}
+          onChangeWorker={(new_worker) => {
+            if (new_worker) {
+              const newWorker = filteredWorkers.filter(
+                (w) => w.name.toLowerCase() === new_worker.name.toLowerCase(),
+              )[0];
+              setEditingWorker(newWorker);
+            }
+          }}
         />
       )}
-      {deletingAllergy && (
+      {deletingWorker && deletingAllergy && (
         <div
           className="fixed inset-0 flex items-center justify-center bg-black/50"
           style={{
@@ -365,14 +333,17 @@ export const Allergies = () => {
               style={{ marginTop: "1.5rem" }}
             >
               <button
-                onClick={() => setDeletingAllergy(null)}
+                onClick={() => {
+                  setDeletingWorker(null);
+                  setDeletingAllergy(null);
+                }}
                 className="rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors cursor-pointer"
                 style={{ paddingInline: "1rem", paddingBlock: "0.5rem" }}
               >
                 Cancel
               </button>
               <button
-                onClick={() => handleDelete(deletingAllergy)}
+                onClick={() => handleDelete(deletingWorker, deletingAllergy)}
                 className="rounded-lg bg-red-600 text-white hover:bg-red-300 transition-opacity cursor-pointer"
                 style={{ paddingInline: "1rem", paddingBlock: "0.5rem" }}
               >
@@ -387,26 +358,28 @@ export const Allergies = () => {
 };
 function AllergyFormModal({
   allergy,
+  worker,
   workers,
   onClose,
   onSave,
+  onChangeWorker,
 }: {
-  allergy: Allergy | null;
-  workers: Worker[];
+  allergy: Allergen | null;
+  worker: UserData | null;
+  workers: UserData[];
   onClose: () => void;
-  onSave: (allergy: Allergy) => void;
+  onSave: (worker: UserData, allergy: Allergen) => void;
+  onChangeWorker: Dispatch<SetStateAction<UserData | null>>;
 }) {
-  const [formData, setFormData] = useState<Omit<Allergy, "id">>({
-    workerId: allergy?.workerId || workers[0].id,
-    type: allergy?.type || "",
+  const [formData, setFormData] = useState<Allergen>({
+    name: allergy?.name || "",
     notes: allergy?.notes || "",
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      id: allergy?.id || "temp-id",
-      ...formData,
-    });
+    if (worker) {
+      onSave(worker, formData);
+    }
   };
   return (
     <div
@@ -424,7 +397,7 @@ function AllergyFormModal({
           style={{ marginBottom: "1.5rem" }}
         >
           <h3 className="text-lg font-semibold text-gray-900 pointer-events-none">
-            {allergy ? "Edit Allergy" : "Add Allergy"}
+            {allergy ? "Edit Allergen" : "Add Allergen"}
           </h3>
           <button
             onClick={onClose}
@@ -441,19 +414,21 @@ function AllergyFormModal({
         >
           <div>
             <select
-              value={formData.workerId}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  workerId: e.target.value,
-                }))
-              }
-              className="w-full rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              value={worker?.name || ""}
+              onChange={(e) => {
+                const selectedWorker = workers.find(
+                  (w) => w.name === e.target.value,
+                );
+                onChangeWorker(selectedWorker || null);
+              }}
+              disabled={allergy !== null}
+              className={`w-full rounded-lg border border-gray-200 ${allergy !== null && "bg-gray-200"} focus:outline-none focus:ring-2 focus:ring-green-500`}
               style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
               required
             >
+              <option value="">Select a worker</option>
               {workers.map((worker) => (
-                <option key={worker.id} value={worker.id}>
+                <option key={worker.name} value={worker.name}>
                   {worker.name}
                 </option>
               ))}
@@ -462,11 +437,11 @@ function AllergyFormModal({
           <div>
             <input
               type="text"
-              value={formData.type}
+              value={formData.name}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  type: e.target.value,
+                  name: e.target.value,
                 }))
               }
               className="w-full rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -477,7 +452,7 @@ function AllergyFormModal({
           </div>
           <div>
             <textarea
-              value={formData.notes}
+              value={formData.notes || ""}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
@@ -503,8 +478,9 @@ function AllergyFormModal({
               type="submit"
               className="rounded-lg bg-green-600 text-white hover:opacity-90 transition-opacity cursor-pointer"
               style={{ paddingInline: "1rem", paddingBlock: "0.5rem" }}
+              disabled={!worker || !formData.name}
             >
-              {allergy ? "Save Changes" : "Add Allergy"}
+              {allergy ? "Save Changes" : "Add Allergen"}
             </button>
           </div>
         </form>
