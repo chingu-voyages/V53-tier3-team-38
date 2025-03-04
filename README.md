@@ -2,6 +2,8 @@
 
 **Voyage-Project-Tier3-Menu-Scheduler**
 
+![Kitchen Manager Dashboard](https://github.com/user-attachments/assets/23482787-78cc-43a6-884a-17ea5cfcdffa)
+
 This project focuses on developing a menu scheduling application that allows managers to create and share weekly menus for staff workers. The application ensures employees have clear visibility of the planned meals while addressing specific dietary restrictions and allergies.
 
 ## Key Features
