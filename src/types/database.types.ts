@@ -104,14 +104,21 @@ export type DailyCardProps = {
 };
 
 export type UserData = {
-  user_id?: string;
+  user_id: string;
   name: string;
   email: string;
-  avatar_url?: string;
+  avatar_url: string;
   allergen_info: Array<Allergen>;
+  isAdmin: boolean;
 };
 
 export type CustomResponse = {
   success: boolean;
   error?: PostgrestError | string | null;
+};
+
+export type DaySchedule = {
+  date: string;
+  dishes: Dish[] | null;
+  isDayOff: boolean;
 };

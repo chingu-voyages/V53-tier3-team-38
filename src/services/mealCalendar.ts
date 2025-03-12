@@ -1,5 +1,10 @@
 import supabase from "@/supabase-client";
-import { DailyCardProps, MealCalendar, MealDish } from "@/types/database.types";
+import {
+  DailyCardProps,
+  DaySchedule,
+  MealCalendar,
+  MealDish,
+} from "@/types/database.types";
 
 export async function getMealCalendar() {
   const { data, error } = await supabase
@@ -121,6 +126,15 @@ class MealCalendarService {
   async getDashboardData(): Promise<DailyCardProps[]> {
     const { data, error } = await supabase
       .from("fetch_dashboard_data")
+      .select("*");
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  async getWeeklyMenuPlan(): Promise<DaySchedule[]> {
+    const { data, error } = await supabase
+      .from("meal_calendar_view")
       .select("*");
 
     if (error) throw error;

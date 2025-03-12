@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Users,
   Lock,
@@ -11,24 +11,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { CustomInput } from "@/components/reusableComponents/customInput";
 import { CustomButton } from "@/components/reusableComponents/customButton";
-interface UserSettings {
-  name: string;
-  email: string;
-  allergies: string[];
-  avatar: string;
-  isAdmin: boolean;
-}
-const mockUserSettings: UserSettings = {
-  name: "John Cooper",
-  email: "john.cooper@kitchenmanager.com",
-  allergies: ["Peanuts", "Shellfish"],
-  avatar:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  isAdmin: true,
-};
+import userService from "@/services/userManagement";
+import { UserData } from "@/types/database.types";
+
 type EditingSection = "profile" | "password" | null;
+
 export const Settings: React.FC = () => {
-  const [userInfo, setUserInfo] = useState(mockUserSettings);
+  const [userInfo, setUserInfo] = useState<UserData | null>(null);
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
   const [passwords, setPasswords] = useState({
     current: "",
@@ -39,6 +28,16 @@ export const Settings: React.FC = () => {
     type: "success" | "error";
     text: string;
   } | null>(null);
+
+  useEffect(() => {
+    async function fetchUserData() {
+      const data = await userService.getCurrentUserAllergenInfo();
+      setUserInfo(data);
+    }
+
+    fetchUserData();
+  }, []);
+
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setMessage({
@@ -75,10 +74,13 @@ export const Settings: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserInfo((prev) => ({
-          ...prev,
-          avatar: reader.result as string,
-        }));
+        setUserInfo((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            avatar_url: reader.result as string,
+          };
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -118,7 +120,7 @@ export const Settings: React.FC = () => {
             <div className="flex flex-col items-center" style={{ gap: "1rem" }}>
               <div className="relative">
                 <img
-                  src={userInfo.avatar}
+                  src={userInfo?.avatar_url}
                   alt="Profile"
                   className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
                 />
@@ -173,9 +175,15 @@ export const Settings: React.FC = () => {
                   type="text"
                   label="Full Name"
                   className="rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={userInfo.name}
+                  value={userInfo?.name}
                   onChange={(e) =>
-                    setUserInfo((prev) => ({ ...prev, name: e.target.value }))
+                    setUserInfo((prev) => {
+                      if (!prev) return null;
+                      return {
+                        ...prev,
+                        name: e.target.value,
+                      };
+                    })
                   }
                   style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
                   required
@@ -184,9 +192,15 @@ export const Settings: React.FC = () => {
                   type="email"
                   label="Email Address"
                   className="rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={userInfo.email}
+                  value={userInfo?.email}
                   onChange={(e) =>
-                    setUserInfo((prev) => ({ ...prev, email: e.target.value }))
+                    setUserInfo((prev) => {
+                      if (!prev) return null;
+                      return {
+                        ...prev,
+                        email: e.target.value,
+                      };
+                    })
                   }
                   style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
                   required
@@ -195,15 +209,23 @@ export const Settings: React.FC = () => {
                   type="text"
                   label="Allergies (comma-separated)"
                   className="rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={userInfo.allergies.join(", ")}
+                  value={userInfo?.allergen_info.map((a) => a.name).join(", ")}
                   onChange={(e) =>
-                    setUserInfo((prev) => ({
-                      ...prev,
-                      allergies: e.target.value
-                        .split(",")
-                        .map((i) => i.trim())
-                        .filter(Boolean),
-                    }))
+                    setUserInfo((prev) => {
+                      if (!prev) return null;
+
+                      return {
+                        ...prev,
+                        allergen_info: e.target.value
+                          .split(",")
+                          .map((i) => i.trim())
+                          .filter(Boolean)
+                          .map((name) => ({
+                            name,
+                            notes: null,
+                          })),
+                      };
+                    })
                   }
                   style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
                   placeholder="e.g. Peanuts, Shellfish, Dairy"
@@ -246,13 +268,13 @@ export const Settings: React.FC = () => {
                 }}
               >
                 <span className="text-sm text-gray-500">Full Name</span>
-                <span className="text-gray-900">{userInfo.name}</span>
+                <span className="text-gray-900">{userInfo?.name}</span>
                 <span className="text-sm text-gray-500">Email Address</span>
-                <span className="text-gray-900">{userInfo.email}</span>
+                <span className="text-gray-900">{userInfo?.email}</span>
                 <span className="text-sm text-gray-500">Allergies</span>
                 <span className="text-gray-900">
-                  {userInfo.allergies.length > 0
-                    ? userInfo.allergies.join(", ")
+                  {userInfo?.allergen_info && userInfo?.allergen_info.length > 0
+                    ? userInfo?.allergen_info.map((a) => a.name).join(", ")
                     : "No allergies specified"}
                 </span>
               </div>
@@ -360,7 +382,7 @@ export const Settings: React.FC = () => {
               <div className="text-sm text-gray-500">●●●●●●●●</div>
             )}
           </div>
-          {userInfo.isAdmin && (
+          {userInfo?.isAdmin && (
             <div style={{ padding: "1rem" }}>
               <h2
                 className="font-medium text-gray-900"
