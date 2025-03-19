@@ -109,7 +109,7 @@ export type UserData = {
   email: string;
   avatar_url: string;
   allergen_info: Array<Allergen>;
-  isAdmin: boolean;
+  isadmin: boolean;
 };
 
 export type CustomResponse = {

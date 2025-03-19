@@ -382,7 +382,7 @@ export const Settings: React.FC = () => {
               <div className="text-sm text-gray-500">●●●●●●●●</div>
             )}
           </div>
-          {userInfo?.isAdmin && (
+          {userInfo?.isadmin && (
             <div style={{ padding: "1rem" }}>
               <h2
                 className="font-medium text-gray-900"
