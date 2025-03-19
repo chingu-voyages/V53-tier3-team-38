@@ -8,123 +8,54 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { format, addDays, startOfWeek } from "date-fns";
+// import { format, addDays, startOfWeek } from "date-fns";
+import { format } from "date-fns";
 import { CustomButton } from "@/components/reusableComponents/customButton";
 import { useNavigate } from "react-router-dom";
-const mockDishes = [
-  {
-    id: 1,
-    name: "Grilled Salmon",
-    ingredients: ["Salmon", "Lemon", "Herbs"],
-    calories: 450,
-    allergens: ["Fish"],
-  },
-  {
-    id: 2,
-    name: "Vegetable Stir Fry",
-    ingredients: ["Broccoli", "Carrots", "Tofu", "Soy Sauce"],
-    calories: 300,
-    allergens: ["Soy"],
-  },
-  {
-    id: 3,
-    name: "Chicken Pasta",
-    ingredients: ["Pasta", "Chicken", "Cream"],
-    calories: 550,
-    allergens: ["Gluten", "Dairy"],
-  },
-  {
-    id: 4,
-    name: "Quinoa Bowl",
-    ingredients: ["Quinoa", "Vegetables", "Olive Oil"],
-    calories: 400,
-    allergens: [],
-  },
-  {
-    id: 5,
-    name: "Grilled Chicken",
-    ingredients: ["Chicken", "Herbs", "Olive Oil"],
-    calories: 350,
-    allergens: [],
-  },
-];
-const mockWorkerAllergies = [
-  {
-    workerId: 1,
-    name: "Sarah Johnson",
-    allergies: ["Fish", "Shellfish"],
-  },
-  {
-    workerId: 2,
-    name: "Mike Chen",
-    allergies: ["Dairy"],
-  },
-];
-interface Dish {
-  id: number;
-  name: string;
-  ingredients: string[];
-  calories: number;
-  allergens: string[];
-}
-interface DaySchedule {
-  id: number;
-  date: Date;
-  dish: Dish | null;
-  isDayOff: boolean;
-}
+import dishService from "@/services/dish";
+import { DaySchedule, Dish, UserData } from "@/types/database.types";
+import userService from "@/services/userManagement";
+import mealCalendarService from "@/services/mealCalendar";
+
 export const WeeklyMenus: React.FC = () => {
+  const [workerData, setWorkerData] = useState<UserData[]>([]);
   const [currentWeek, setCurrentWeek] = useState<Date>(new Date());
   const [schedule, setSchedule] = useState<DaySchedule[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [safeDishes, setSafeDishes] = useState<Dish[]>([]);
   const navigate = useNavigate();
+
   useEffect(() => {
-    const workerAllergens = mockWorkerAllergies.flatMap(
-      (worker) => worker.allergies,
-    );
-    const safe = mockDishes.filter(
-      (dish) =>
-        !dish.allergens.some((allergen) => workerAllergens.includes(allergen)),
-    );
-    setSafeDishes(safe);
+    async function fetchSafeDishes() {
+      const userData = await userService.getUserAllergensView();
+      setWorkerData(userData);
+
+      const dishData = await dishService.getDishes();
+      const userAllergens = workerData.flatMap((user) =>
+        user.allergen_info.map((a) => a.name),
+      );
+
+      const safe = dishData.filter(
+        (dish) =>
+          !dish.allergens?.some((allergen) => userAllergens.includes(allergen)),
+      );
+      setSafeDishes(safe);
+    }
+
+    fetchSafeDishes();
   }, []);
+
   useEffect(() => {
-    const weekStart = startOfWeek(currentWeek, {
-      weekStartsOn: 1,
-    });
-    const newSchedule: DaySchedule[] = Array.from(
-      {
-        length: 7,
-      },
-      (_, i) => {
-        const date = addDays(weekStart, i);
-        if (i === 1) {
-          return {
-            id: i,
-            date,
-            dish: safeDishes.find((d) => d.id === 5) || null,
-            isDayOff: false,
-          };
-        }
-        if (i === 3) {
-          return {
-            id: i,
-            date,
-            dish: safeDishes.find((d) => d.id === 4) || null,
-            isDayOff: false,
-          };
-        }
-        return {
-          id: i,
-          date,
-          dish: null,
-          isDayOff: false,
-        };
-      },
-    );
-    setSchedule(newSchedule);
+    // const weekStart = startOfWeek(currentWeek, {
+    //   weekStartsOn: 1,
+    // });
+    async function fetchWeeklyMenus() {
+      const latestSchedule = await mealCalendarService.getWeeklyMenuPlan();
+      setSchedule(latestSchedule);
+    }
+
+    fetchWeeklyMenus();
   }, [currentWeek, safeDishes]);
   const generateWeeklyMenu = () => {
     if (safeDishes.length === 0) {
@@ -144,8 +75,8 @@ export const WeeklyMenus: React.FC = () => {
     setSuccess("Weekly menu generated successfully!");
     setTimeout(() => setSuccess(null), 3000);
   };
-  const navigateDay = (id: number) => {
-    navigate(`/dashboard/manage-menus/daily/${id}`);
+  const navigateDay = (date: string) => {
+    navigate(`/dashboard/manage-menus/daily/${date}`);
   };
   const navigateWeek = (direction: "prev" | "next") => {
     const newDate = new Date(currentWeek);
@@ -247,7 +178,7 @@ export const WeeklyMenus: React.FC = () => {
                     </div>
                   </div>
                   <button
-                    onClick={() => navigateDay(day.id)}
+                    onClick={() => navigateDay(day.date)}
                     className={
                       "rounded-full text-sm font-medium bg-green-600 text-white hover:opacity-90 transition-opacity cursor-pointer"
                     }
@@ -263,22 +194,24 @@ export const WeeklyMenus: React.FC = () => {
               </div>
               <div style={{ padding: "1rem" }}>
                 {!day.isDayOff &&
-                  (day.dish ? (
+                  (day.dishes ? (
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">
-                        {day.dish.name}
+                        {day.dishes[0].name}
                       </h3>
                       <p
                         className="text-sm text-gray-500"
                         style={{ marginTop: "0.25rem" }}
                       >
-                        {day.dish.ingredients.join(", ")}
+                        {day.dishes[0].ingredients
+                          ? day.dishes[0].ingredients.join(", ")
+                          : ""}
                       </p>
                       <p
                         className="text-sm font-medium text-gray-600"
                         style={{ marginTop: "0.5rem" }}
                       >
-                        {day.dish.calories} calories
+                        {day.dishes[0].calories} calories
                       </p>
                     </div>
                   ) : (

@@ -1,59 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { DailyCard } from "@/components/reusableComponents/dailyCard";
 import { StatusCard } from "@/components/reusableComponents/statusCard";
 import { AlertCircle, Calendar, ChefHat, Settings } from "lucide-react";
-
-type DailyCardProps = {
-  day: string;
-  date: number;
-  mealTitle: string;
-  dishCount: number;
-};
-
-const dailyInformation: DailyCardProps[] = [
-  {
-    day: "Mon",
-    date: 1,
-    mealTitle: "Mediterranean Feast",
-    dishCount: 12,
-  },
-  {
-    day: "Tue",
-    date: 2,
-    mealTitle: "Italian Delight",
-    dishCount: 10,
-  },
-  {
-    day: "Wed",
-    date: 3,
-    mealTitle: "Asian Fusion",
-    dishCount: 15,
-  },
-  {
-    day: "Thu",
-    date: 4,
-    mealTitle: "Mexican Fiesta",
-    dishCount: 8,
-  },
-  {
-    day: "Fri",
-    date: 5,
-    mealTitle: "American Classics",
-    dishCount: 11,
-  },
-  {
-    day: "Sat",
-    date: 6,
-    mealTitle: "Indian Spices",
-    dishCount: 14,
-  },
-  {
-    day: "Sun",
-    date: 7,
-    mealTitle: "French Cuisine",
-    dishCount: 9,
-  },
-];
+import mealCalendarService from "@/services/mealCalendar";
+import { DailyCardProps } from "@/types/database.types";
 
 const quickButtons = [
   {
@@ -75,6 +25,16 @@ const quickButtons = [
 ];
 
 export const Home: React.FC = () => {
+  const [dailyData, setDailyData] = useState<DailyCardProps[]>([]);
+  useEffect(() => {
+    async function fetchData() {
+      const data = await mealCalendarService.getDashboardData();
+      setDailyData(data);
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <section style={{ padding: "1rem" }}>
       <div className="flex flex-wrap gap-6">
@@ -101,7 +61,7 @@ export const Home: React.FC = () => {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {dailyInformation.map((day) => (
+            {dailyData.map((day) => (
               <DailyCard
                 date={day.date}
                 day={day.day}

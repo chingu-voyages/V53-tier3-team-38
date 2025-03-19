@@ -1,71 +1,68 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus, Edit2, Trash2, X, AlertCircle, Check } from "lucide-react";
-interface Dish {
-  id: number;
-  name: string;
-  ingredients: string[];
-  calories: number;
-  allergens: string[];
-}
-const mockDishes = [
-  {
-    id: 1,
-    name: "Grilled Salmon",
-    ingredients: ["Salmon", "Lemon", "Herbs"],
-    calories: 450,
-    allergens: ["Fish"],
-  },
-  {
-    id: 2,
-    name: "Vegetable Stir Fry",
-    ingredients: ["Broccoli", "Carrots", "Tofu", "Soy Sauce"],
-    calories: 300,
-    allergens: ["Soy"],
-  },
-  {
-    id: 3,
-    name: "Chicken Pasta",
-    ingredients: ["Pasta", "Chicken", "Cream"],
-    calories: 550,
-    allergens: ["Gluten", "Dairy"],
-  },
-  {
-    id: 4,
-    name: "Quinoa Bowl",
-    ingredients: ["Quinoa", "Vegetables", "Olive Oil"],
-    calories: 400,
-    allergens: [],
-  },
-  {
-    id: 5,
-    name: "Grilled Chicken",
-    ingredients: ["Chicken", "Herbs", "Olive Oil"],
-    calories: 350,
-    allergens: [],
-  },
-];
+import dishService from "@/services/dish";
+import { Dish } from "@/types/database.types";
+
 export const BrowseDishes: React.FC = () => {
-  const [dishes, setDishes] = useState<Dish[]>(mockDishes);
+  const [dishes, setDishes] = useState<Dish[]>([]);
   const [editingDish, setEditingDish] = useState<Dish | null>(null);
   const [isCreating, setIsCreating] = useState(false);
-  const [deletingDish, setDeletingDish] = useState<number | null>(null);
+  const [deletingDish, setDeletingDish] = useState<string | null>(null);
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
-  const handleSave = (dish: Dish) => {
-    if (editingDish) {
-      setDishes((prev) => prev.map((d) => (d.id === dish.id ? dish : d)));
+  useEffect(() => {
+    async function fetchDishes() {
+      const data = await dishService.getDishes();
+      setDishes(data);
+    }
+
+    fetchDishes();
+  }, []);
+
+  const handleSave = async (dish: Dish, oldName?: string) => {
+    if (editingDish && oldName) {
+      try {
+        await dishService.updateDish(oldName, dish);
+      } catch (error) {
+        console.error(`Error updating dish %s: %s`, dish.name, error);
+        setMessage({
+          type: "error",
+          text: "There was an error updating the dish",
+        });
+      }
+      setDishes((prev) => prev.map((d) => (d.name === oldName ? dish : d)));
       setMessage({
         type: "success",
         text: "Dish updated successfully!",
       });
     } else {
+      // Check to see if name already exists in dishes
+      const isDuplicate = dishes.some((d) => d.name === dish.name);
+      if (isDuplicate) {
+        setMessage({
+          type: "error",
+          text: "This dish already exists",
+        });
+        setTimeout(() => setMessage(null), 3000);
+        return;
+      }
+
+      // Otherwise proceed with creating new dish
+      try {
+        await dishService.createDish(dish);
+      } catch (error) {
+        console.error(`Error creating dish %s: %s`, dish.name, error);
+        setMessage({
+          type: "error",
+          text: "There was an error creating the dish",
+        });
+      }
       setDishes((prev) => [
         ...prev,
         {
           ...dish,
-          id: Math.max(...prev.map((d) => d.id)) + 1,
         },
       ]);
       setMessage({
@@ -77,8 +74,22 @@ export const BrowseDishes: React.FC = () => {
     setIsCreating(false);
     setTimeout(() => setMessage(null), 3000);
   };
-  const handleDelete = (id: number) => {
-    setDishes((prev) => prev.filter((dish) => dish.id !== id));
+
+  const handleDelete = async (name: string) => {
+    try {
+      await dishService.deleteDish(name);
+    } catch (error) {
+      console.error(
+        "There was an error trying to remove dish %s: %s",
+        name,
+        error,
+      );
+      setMessage({
+        type: "error",
+        text: "Ran into an error deleting dish",
+      });
+    }
+    setDishes((prev) => prev.filter((dish) => dish.name !== name));
     setDeletingDish(null);
     setMessage({
       type: "success",
@@ -86,6 +97,7 @@ export const BrowseDishes: React.FC = () => {
     });
     setTimeout(() => setMessage(null), 3000);
   };
+
   return (
     <div
       className="w-full"
@@ -134,7 +146,7 @@ export const BrowseDishes: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {dishes.map((dish) => (
             <div
-              key={dish.id}
+              key={dish.name}
               className="bg-white rounded-lg border border-gray-200"
             >
               <div style={{ padding: "1rem" }}>
@@ -151,7 +163,7 @@ export const BrowseDishes: React.FC = () => {
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => setDeletingDish(dish.id)}
+                      onClick={() => setDeletingDish(dish.name)}
                       className="text-red-600 hover:bg-red-50 rounded-lg transition-colors  cursor-pointer"
                       style={{ padding: "0.5rem" }}
                     >
@@ -163,7 +175,7 @@ export const BrowseDishes: React.FC = () => {
                   className="text-sm text-gray-500"
                   style={{ marginTop: "0.5rem" }}
                 >
-                  {dish.ingredients.join(", ")}
+                  {dish.ingredients?.join(", ")}
                 </p>
                 <div
                   className="flex items-center gap-2"
@@ -172,7 +184,7 @@ export const BrowseDishes: React.FC = () => {
                   <span className="text-sm font-medium text-gray-600">
                     {dish.calories} calories
                   </span>
-                  {dish.allergens.length > 0 && (
+                  {dish.allergens && dish.allergens.length > 0 && (
                     <span
                       className="text-xs bg-yellow-100 text-yellow-800 rounded-full"
                       style={{
@@ -184,7 +196,7 @@ export const BrowseDishes: React.FC = () => {
                     </span>
                   )}
                 </div>
-                {dish.allergens.length > 0 && (
+                {dish.allergens && dish.allergens.length > 0 && (
                   <p
                     className="text-sm text-yellow-600"
                     style={{ marginTop: "0.5rem" }}
@@ -262,7 +274,7 @@ function DishFormModal({
 }: {
   dish: Dish | null;
   onClose: () => void;
-  onSave: (dish: Dish) => void;
+  onSave: (dish: Dish, oldName?: string) => void;
 }) {
   const [formData, setFormData] = useState<Omit<Dish, "id">>({
     name: dish?.name || "",
@@ -272,10 +284,12 @@ function DishFormModal({
   });
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      id: dish?.id || 0,
-      ...formData,
-    });
+    onSave(
+      {
+        ...formData,
+      },
+      dish?.name,
+    );
   };
   return (
     <div
@@ -337,7 +351,7 @@ function DishFormModal({
             </label>
             <input
               type="text"
-              value={formData.ingredients.toString()}
+              value={formData.ingredients?.toString()}
               onChange={(e) => {
                 const value = e.target.value;
                 const ingredientsArray = value.split(",");
@@ -382,7 +396,7 @@ function DishFormModal({
             </label>
             <input
               type="text"
-              value={formData.allergens.toString()}
+              value={formData.allergens?.toString()}
               onChange={(e) => {
                 const value = e.target.value;
                 const allergensArray = value.split(",");
