@@ -1,9 +1,21 @@
 import { Bell, MenuIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import userService from "@/services/userManagement";
+import { UserData } from "@/types/database.types";
 
 export const Header: React.FC = () => {
   const { session } = useAuth();
+  const [userInfo, setUserInfo] = useState<UserData | null>(null);
+
+  useEffect(() => {
+    async function fetchUserData() {
+      const data = await userService.getCurrentUserAllergenInfo();
+      setUserInfo(data);
+    }
+
+    fetchUserData();
+  }, []);
 
   return (
     <header
@@ -33,11 +45,19 @@ export const Header: React.FC = () => {
             ></span>
           </button>
           <div className="flex items-center gap-2">
-            <img
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt="User avatar"
-              className="w-8 h-8 rounded-full"
-            />
+            {userInfo?.avatar_url ? (
+              <img
+                src={userInfo?.avatar_url}
+                alt="User avatar"
+                className="w-8 h-8 rounded-full"
+              />
+            ) : (
+              <div className="flex items-center justify-center w-8 h-8 rounded-full object-cover border-2 border-gray-200 bg-gray-200">
+                <div className="text-sm text-black">
+                  {userInfo?.name.charAt(0).toUpperCase()}
+                </div>
+              </div>
+            )}
             <span
               className="font-medium"
               style={{ color: "#2C3E50", pointerEvents: "none" }}
