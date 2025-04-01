@@ -10,9 +10,11 @@ import {
   Search,
 } from "lucide-react";
 import userService from "@/services/userManagement";
+import allergensService from "@/services/allergen";
 import { Allergen, UserData } from "@/types/database.types";
 
 export const Allergies = () => {
+  const [allergenList, setAllergenList] = useState<Allergen[]>([]);
   const [workerAllergies, setWorkerAllergies] = useState<UserData[]>([]);
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +35,15 @@ export const Allergies = () => {
     }
 
     fetchAllergenData();
+  }, []);
+
+  useEffect(() => {
+    async function fetchAllergensList() {
+      const data = await allergensService.getAllergens();
+      setAllergenList(data);
+    }
+
+    fetchAllergensList();
   }, []);
 
   const filteredWorkers = workerAllergies.filter(
@@ -202,7 +213,7 @@ export const Allergies = () => {
           {filteredWorkers.length > 0 ? (
             filteredWorkers.map((worker) => (
               <div
-                key={worker.name}
+                key={worker.email}
                 className="bg-white rounded-lg border border-gray-200"
               >
                 <div
@@ -288,6 +299,7 @@ export const Allergies = () => {
           allergy={editingAllergy}
           worker={editingWorker}
           workers={filteredWorkers}
+          allergenList={allergenList}
           onClose={() => {
             setEditingWorker(null);
             setEditingAllergy(null);
@@ -356,10 +368,12 @@ export const Allergies = () => {
     </div>
   );
 };
+
 function AllergyFormModal({
   allergy,
   worker,
   workers,
+  allergenList,
   onClose,
   onSave,
   onChangeWorker,
@@ -367,6 +381,7 @@ function AllergyFormModal({
   allergy: Allergen | null;
   worker: UserData | null;
   workers: UserData[];
+  allergenList: Allergen[];
   onClose: () => void;
   onSave: (worker: UserData, allergy: Allergen) => void;
   onChangeWorker: Dispatch<SetStateAction<UserData | null>>;
@@ -428,14 +443,14 @@ function AllergyFormModal({
             >
               <option value="">Select a worker</option>
               {workers.map((worker) => (
-                <option key={worker.name} value={worker.name}>
+                <option key={worker.email} value={worker.name}>
                   {worker.name}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <input
+            {/* <input
               type="text"
               value={formData.name}
               onChange={(e) =>
@@ -448,7 +463,28 @@ function AllergyFormModal({
               style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
               required
               placeholder="Enter allergy type..."
-            />
+            /> */}
+            <select
+              value={formData.name}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  name: e.target.value,
+                }))
+              }
+              className="w-full rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
+              style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
+              required
+            >
+              <option value="" disabled>
+                Select allergy type...
+              </option>
+              {allergenList.map((a) => (
+                <option key={a.name} value={a.name}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <textarea
