@@ -119,11 +119,20 @@ export const Settings: React.FC = () => {
           <div style={{ padding: "1rem", borderBottom: "1px solid #E5E7EB" }}>
             <div className="flex flex-col items-center" style={{ gap: "1rem" }}>
               <div className="relative">
-                <img
-                  src={userInfo?.avatar_url}
-                  alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
-                />
+                {userInfo?.avatar_url ? (
+                  <img
+                    src={userInfo?.avatar_url}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover border-2 border-gray-200"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-24 h-24 rounded-full object-cover border-2 border-gray-200 bg-gray-200">
+                    <div className="text-3xl text-black">
+                      {userInfo?.name.charAt(0).toUpperCase()}
+                    </div>
+                  </div>
+                )}
+
                 <label className="absolute bottom-0 right-0 p-1 bg-white rounded-full border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors">
                   <input
                     type="file"
