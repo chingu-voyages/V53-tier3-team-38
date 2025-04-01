@@ -13,21 +13,22 @@ import { CustomInput } from "@/components/reusableComponents/customInput";
 import { CustomButton } from "@/components/reusableComponents/customButton";
 import userService from "@/services/userManagement";
 import { UserData } from "@/types/database.types";
+import supabase from "@/supabase-client";
+import { useAuth } from "@/context/AuthContext";
 
 type EditingSection = "profile" | "password" | null;
 
 export const Settings: React.FC = () => {
   const [userInfo, setUserInfo] = useState<UserData | null>(null);
   const [editingSection, setEditingSection] = useState<EditingSection>(null);
-  const [passwords, setPasswords] = useState({
-    current: "",
-    new: "",
-    confirm: "",
-  });
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
+  const [stateSuccess, setStateSuccess] = useState("");
+  const [stateError, setStateError] = useState("");
+  const [stateLoading, setStateLoading] = useState(false);
+  const { validateEmail } = useAuth();
 
   useEffect(() => {
     async function fetchUserData() {
@@ -47,28 +48,34 @@ export const Settings: React.FC = () => {
     setEditingSection(null);
     setTimeout(() => setMessage(null), 3000);
   };
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwords.new !== passwords.confirm) {
-      setMessage({
-        type: "error",
-        text: "New passwords don't match!",
-      });
-      setTimeout(() => setMessage(null), 3000);
+
+  async function handleResetPassword(email: string | undefined) {
+    if (!email || !validateEmail(email)) {
+      setStateError("Invalid user email");
       return;
     }
-    setMessage({
-      type: "success",
-      text: "Password updated successfully!",
-    });
-    setPasswords({
-      current: "",
-      new: "",
-      confirm: "",
-    });
-    setEditingSection(null);
-    setTimeout(() => setMessage(null), 3000);
-  };
+
+    try {
+      setStateLoading(true);
+      let { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${import.meta.env.VITE_APP_URL}/reset-password`,
+      });
+
+      if (error) {
+        setStateError(error.message);
+      } else if (data) {
+        setStateSuccess("Reset email has been sent to your inbox.");
+      }
+    } catch (error) {
+      // Run any email validation here
+      console.error(error);
+      setStateError("Error from Supabase");
+    } finally {
+      setStateLoading(false);
+      setEditingSection(null);
+    }
+  }
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -102,6 +109,12 @@ export const Settings: React.FC = () => {
           style={{ marginBottom: "1rem", padding: "1rem" }}
         >
           <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
+          {stateError && (
+            <div className="text-sm text-red-500">{stateError}</div>
+          )}
+          {stateSuccess && (
+            <div className="text-sm text-green-500">{stateSuccess}</div>
+          )}
         </div>
         {message && (
           <div
@@ -285,7 +298,7 @@ export const Settings: React.FC = () => {
               className="flex justify-between items-start"
               style={{ marginBottom: "1rem" }}
             >
-              <h2 className="font-medium text-gray-900">Password</h2>
+              <h2 className="font-medium text-gray-900">Password Reset</h2>
               {editingSection !== "password" && (
                 <CustomButton
                   type="button"
@@ -301,85 +314,37 @@ export const Settings: React.FC = () => {
                 </CustomButton>
               )}
             </div>
-            {editingSection === "password" ? (
-              <form
-                onSubmit={handlePasswordSubmit}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                }}
-              >
-                <CustomInput
-                  type="password"
-                  label="Current Password"
-                  className="rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={passwords.current}
-                  onChange={(e) =>
-                    setPasswords((prev) => ({
-                      ...prev,
-                      current: e.target.value,
-                    }))
-                  }
-                  style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
-                  required
-                />
-                <CustomInput
-                  type="password"
-                  label="New Password"
-                  className="rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={passwords.new}
-                  onChange={(e) =>
-                    setPasswords((prev) => ({ ...prev, new: e.target.value }))
-                  }
-                  style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
-                  required
-                />
-                <CustomInput
-                  type="password"
-                  label="Confirm New Password"
-                  className="rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  value={passwords.confirm}
-                  onChange={(e) =>
-                    setPasswords((prev) => ({
-                      ...prev,
-                      confirm: e.target.value,
-                    }))
-                  }
-                  style={{ paddingInline: "0.75rem", paddingBlock: "0.5rem" }}
-                  required
-                />
-                <div className="flex justify-end gap-3">
-                  <CustomButton
-                    type="button"
-                    variantColor="white"
-                    onClick={() => setEditingSection(null)}
-                    className="rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
-                    style={{
-                      cursor: "pointer",
-                      paddingInline: "1rem",
-                      paddingBlock: "0.5rem",
-                    }}
-                  >
-                    Cancel
-                  </CustomButton>
-                  <CustomButton
-                    type="submit"
-                    variantColor="green"
-                    className="flex items-center gap-2 rounded-lg bg-green-600 text-white hover:opacity-90 transition-opacity"
-                    style={{
-                      cursor: "pointer",
-                      paddingInline: "1rem",
-                      paddingBlock: "0.5rem",
-                    }}
-                  >
-                    <Lock />
-                    Update Password
-                  </CustomButton>
-                </div>
-              </form>
-            ) : (
-              <div className="text-sm text-gray-500">●●●●●●●●</div>
+            {editingSection === "password" && (
+              <div className="flex justify-end gap-3">
+                <CustomButton
+                  type="button"
+                  variantColor="white"
+                  onClick={() => setEditingSection(null)}
+                  className="rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                  style={{
+                    cursor: "pointer",
+                    paddingInline: "1rem",
+                    paddingBlock: "0.5rem",
+                  }}
+                >
+                  No, Go Back
+                </CustomButton>
+                <CustomButton
+                  type="button"
+                  variantColor="green"
+                  onClick={() => handleResetPassword(userInfo?.email)}
+                  className="flex items-center gap-2 rounded-lg bg-green-600 text-white hover:opacity-90 transition-opacity"
+                  style={{
+                    cursor: "pointer",
+                    paddingInline: "1rem",
+                    paddingBlock: "0.5rem",
+                  }}
+                  disabled={stateLoading}
+                >
+                  <Lock />
+                  Yes, Reset My Password
+                </CustomButton>
+              </div>
             )}
           </div>
           {userInfo?.isadmin && (
